@@ -16,6 +16,8 @@ export class CollectionEntity implements Collection {
     Object.assign(this, partial);
   };
   address: string;
+  shortUrl  : string;
+  metadata : string
 }
 export enum TXSTATUS {
   PENDING = "PENDING",
