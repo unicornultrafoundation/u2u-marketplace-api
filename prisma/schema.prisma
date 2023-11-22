@@ -60,6 +60,8 @@ model Collection {
   symbol         String           @unique
   description    String?
   address        String?
+  shortUrl       String           @unique
+  metadata       String?
   status         TX_STATUS
   type           CONTRACT_TYPE
   categoryId     Int

@@ -14,7 +14,9 @@ export class CollectionEntity implements Collection {
   updatedAt : Date;
   constructor(partial: Partial<Collection>) {
     Object.assign(this, partial);
-  };
+  }
+  metadata: string;
+  shortUrl: string;
   address: string;
 }
 export enum TXSTATUS {

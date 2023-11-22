@@ -11,6 +11,10 @@ export class CreateCollectionDto {
   @IsNotEmpty({ message: 'Please Enter Transaction Hash' })
   txCreationHash: string;
 
+  @IsString({message : 'Short url is invalid'})
+  @IsNotEmpty({ message: 'Please Enter Shorturl for your Collection' })
+  shortUrl: string;
+
   @IsString({message : 'Name Collection is invalid'})
   @IsNotEmpty({ message: 'Please Enter Name Collection' })
   name : string;
@@ -21,6 +25,9 @@ export class CreateCollectionDto {
 
   @IsOptional()
   description : string;
+
+  @IsOptional()
+  metadata : string;
 
   @IsOptional()
   @IsEnum(TX_STATUS)

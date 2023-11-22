@@ -3,7 +3,7 @@ import { CreateCollectionDto } from './dto/create-collection.dto';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { CollectionEntity } from './entities/collection.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { TX_STATUS, User } from '@prisma/client'
+import { Prisma, TX_STATUS, User } from '@prisma/client'
 import { validate as isValidUUID } from 'uuid'
 import { Redis } from 'src/database';
 
@@ -33,6 +33,7 @@ export class CollectionService {
             description: input.description,
             status: (TX_STATUS.PENDING),
             type: input.type,
+            shortUrl: input.shortUrl,
             categoryId: Number(input.categoryId),
           }
         })
@@ -76,17 +77,20 @@ export class CollectionService {
 
   async findOne(id: string): Promise<any> {
     try{
+      let whereCondition: Prisma.CollectionWhereInput ;
       if (!isValidUUID(id)) {
-        throw new Error('Invalid ID. Please try again !');
+        // throw new Error('Invalid ID. Please try again !');
+        whereCondition = {
+          shortUrl: id
+        }
+      } else {
+        whereCondition = {
+          id
+        }
       }
-      let checkExist = await this.prisma.collection.findFirst({ where: { id: id } });
-      if (!checkExist) {
-        throw new NotFoundException()
-      }
-      return this.prisma.collection.findUnique({
-        where: {
-          id: id
-        },
+      
+      const collection = this.prisma.collection.findFirst({
+        where: whereCondition,
         include: {
           category: {
             select: {
@@ -163,6 +167,10 @@ export class CollectionService {
           }
         }
       })
+      if (!collection) {
+        throw new NotFoundException()
+      }
+      return collection;
     }catch(error){
       throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
     } 

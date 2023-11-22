@@ -23,6 +23,7 @@ export class CollectionController {
 
   @Get(':id')
   findOne(@Param('id') id : string){
+    console.log(id)
     return this.collectionService.findOne(id);
   }
 
