@@ -69,7 +69,7 @@ export class UserServiceExtend {
     return new GraphQLClient(this.endpoint);
   }
 
-  async getNFTBytUser(id: string): Promise<Result> {
+  async getNFTByUser(id: string): Promise<Result> {
     try {
       if (!isValidUUID(id)) {
         throw new Error('Invalid ID. Please try again !');
@@ -187,4 +187,7 @@ export class UserServiceExtend {
       return matchingNFT ? { ...token, ...(matchingNFT.quantity ? { value: matchingNFT.quantity } : {}), ...matchingNFT.nft, status: matchingNFTStatus } : token;
     });
   }
+
+
+
 }

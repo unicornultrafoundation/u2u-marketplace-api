@@ -9,7 +9,7 @@ import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { User } from '@prisma/client';
 import { AuthenticationGuard } from '../auth/guards/auth.guard';
 import { GetAllUser } from './dto/get-all-user.dto';
-import {UserServiceExtend} from './user-graph.service'
+import {UserServiceExtend} from './user-graph.service';
 
 @Controller('user')
 export class UserController {
@@ -36,7 +36,7 @@ export class UserController {
 
   @Get('/nft/:id')
   async getNFTWithUserID(@Param('id') id: string){
-    return await this.userServiceExtend.getNFTBytUser(id)
+    return await this.userServiceExtend.getNFTByUser(id)
   }
 
 }
