@@ -3800,6 +3800,9 @@ export const GetStatusErc721SDocument = gql`
       txCreation
       id
     }
+<<<<<<< HEAD
+>>>>>>> 7c8ac33 (commit save)
+=======
 >>>>>>> 7c8ac33 (commit save)
   }
 }
