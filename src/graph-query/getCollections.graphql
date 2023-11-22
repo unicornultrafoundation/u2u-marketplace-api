@@ -1,11 +1,18 @@
 # src/graph-query/getCollections.graphql
 
 query GetCollections($first: Int!) {
-    collections(first: $first) {
+    collections {
       id
-      owner
+      type
       txCreation
-      name
       symbol
+      parent
+      owner
+      name
+      minters
+      meta
+      features
+      bestSellOrder
+      bestBidOrder
     }
   }   
