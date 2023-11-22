@@ -75,7 +75,7 @@ export class UserServiceExtend {
         throw new Error('Invalid ID. Please try again !');
       }
 
-      const [userData, onChainData] = await Promise.all([
+      const [userData] = await Promise.all([
         this.prisma.user.findUnique({
           where: { id },
           include: {
@@ -113,33 +113,17 @@ export class UserServiceExtend {
             }
           }
         }),
-        this.getOnChainData(id),
       ]);
 
       if (!userData) {
         throw new NotFoundException()
       }
-
       const { publicKey } = userData;
-      // Data On Chain
-      const client = this.getGraphqlClient();
-      const sdk = getSdk(client);
-      const { account } = await sdk.getNFTwithAccountID({ id: publicKey });
-
-      let { marketEvent721S: statusERC721S = [] } = await sdk.getStatusERC721S();
-      let { marketEvent1155S: statusERC1155S = [] } = await sdk.getStatusERC1155S();
-
-
-      let statusERC721Ssort = this.sortAndRetrieveLastItemWithNFTid(statusERC721S);
-      let statusERC1155Ssort = this.sortAndRetrieveLastItemWithNFTid(statusERC1155S);
-
-
-      let { ERC721tokens = [], ERC1155balances = [] } = (account || {});
+      const { statusERC721S = [], statusERC1155S = [], ERC721tokens = [], ERC1155balances = [] } = await this.getOnChainData(publicKey);
       let { nftsOwnership = [] } = (userData || {});
 
-      const mergedERC721 = this.mergeERCData(ERC721tokens, nftsOwnership, statusERC721Ssort);
-      const mergedERC1155 = this.mergeERCData(ERC1155balances, nftsOwnership, statusERC1155Ssort);
-
+      const mergedERC721 = this.mergeERCData721(ERC721tokens, nftsOwnership, statusERC721S);
+      const mergedERC1155 = this.mergeERCData1155(ERC1155balances, nftsOwnership, statusERC1155S);
       delete userData.nftsOwnership;
       return { ...userData, ERC721tokens: mergedERC721, ERC1155balances: mergedERC1155 };
     } catch (err) {
@@ -152,42 +136,69 @@ export class UserServiceExtend {
     const client = this.getGraphqlClient();
     const sdk = getSdk(client);
     const { account } = await sdk.getNFTwithAccountID({ id: publicKey });
-
     const { marketEvent721S: statusERC721S = [] } = await sdk.getStatusERC721S();
     const { marketEvent1155S: statusERC1155S = [] } = await sdk.getStatusERC1155S();
-
     return { ERC721tokens: account?.ERC721tokens || [], ERC1155balances: account?.ERC1155balances || [], statusERC721S, statusERC1155S };
   }
 
-  sortAndRetrieveLastItemWithNFTid(data: any[]) {
-    const groupedData = data.reduce((result, item) => {
-      const key = item.nftId.id;
+  mergeERCData721(tokens: any[], nftsOwnership: NFTOwnership[], status: any[]): any[] {
+    return nftsOwnership.map((nft) => {
+      const matchingNFT = tokens.find((token) => nft?.nft?.id === token.id);
+      const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
+      delete matchingNFTStatus.nftId;
+      return matchingNFT ? { value : (nft?.quantity || 0),...nft?.nft , status : (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status ) } : {...nft?.nft}
+    });
+  }
 
-      if (!result[key]) {
-        result[key] = [];
+
+  mergeERCData1155(tokens: any[], nftsOwnership: NFTOwnership[], status: any[]): any[] {
+    return nftsOwnership.map((nft) => {
+      const matchingNFT = tokens.find((token) => nft?.nft?.id === token?.token?.id);
+      const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
+      delete matchingNFTStatus.nftId;
+      return matchingNFT ? { value : (matchingNFT?.valueExact || 0) ,...nft?.nft , status : (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status ) } : {...nft?.nft}
+    });
+  }
+
+  async getCollectionByUser(id: string): Promise<any> {
+    try {
+      if (!isValidUUID(id)) {
+        throw new Error('Invalid ID. Please try again !');
       }
 
-      result[key].push(item);
-
-      return result;
-    }, {});
-    const lastItems = Object.keys(groupedData).map((key) => {
-      const group = groupedData[key];
-      group.sort((a: any, b: any) => parseInt(b.timestamp) - parseInt(a.timestamp));
-      return group[0];
-    });
-    return lastItems
+      const userData = await this.prisma.user.findUnique({
+        where: { id: id },
+        include: {
+          nftCollection: {
+            select: {
+              collection: {
+                select: {
+                  id: true,
+                  txCreationHash: true,
+                  name: true,
+                  symbol: true,
+                  description: true,
+                  status: true,
+                  type: true,
+                  categoryId: true,
+                  createdAt: true,
+                  category: {
+                    select: {
+                      id: true,
+                      name: true,
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      })
+      return userData;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
-
-  mergeERCData(tokens: any[], nftsOwnership: NFTOwnership[], status: any[]): any[] {
-    return tokens.map((token) => {
-      const matchingNFT = nftsOwnership.find((nft) => nft.nft.id === token.id);
-      const matchingNFTStatus = (status.find((nft) => nft.nftId.id === token.id) || {});
-      delete matchingNFTStatus.nftId;
-      return matchingNFT ? { ...token, ...(matchingNFT.quantity ? { value: matchingNFT.quantity } : {}), ...matchingNFT.nft, status: matchingNFTStatus } : token;
-    });
-  }
-
-
 
 }
