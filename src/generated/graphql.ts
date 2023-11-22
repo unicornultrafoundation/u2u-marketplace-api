@@ -3801,9 +3801,12 @@ export const GetStatusErc721SDocument = gql`
       id
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 7c8ac33 (commit save)
 =======
 >>>>>>> 7c8ac33 (commit save)
+=======
+>>>>>>> 9cdcd1e (commit save)
   }
 }
     `;

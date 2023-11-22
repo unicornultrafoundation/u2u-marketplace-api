@@ -13,8 +13,6 @@ query getNFTwithAccountID($id: ID!) {
       token {
         id
         txCreation
-        uri
       }
     }
   }
-}
