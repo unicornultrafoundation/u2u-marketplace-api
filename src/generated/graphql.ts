@@ -3754,6 +3754,11 @@ export const GetNfTwithAccountIdDocument = gql`
       valueExact
       value
       id
+      token {
+        id
+        txCreation
+        uri
+      }
     }
   }
 }
@@ -3896,17 +3901,19 @@ export type GetOneNftSellInfoQuery = { __typename?: 'Query', marketEvent1155S: A
 
 export type GetCollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, type?: string | null, txCreation: string, symbol?: string | null, parent?: string | null, owner?: string | null, name?: string | null, minters?: Array<string> | null, meta?: string | null, features?: string | null, bestSellOrder?: string | null, bestBidOrder?: string | null }> };
 
+=======
+>>>>>>> 603b636 (get NFT of User With Update SubGraph)
 export type GetNfTwithAccountIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, ERC721tokens: Array<{ __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string }>, ERC1155balances: Array<{ __typename?: 'ERC1155Balance', valueExact: any, value: any, id: string }> } | null };
+export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, ERC721tokens: Array<{ __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string }>, ERC1155balances: Array<{ __typename?: 'ERC1155Balance', valueExact: any, value: any, id: string, token: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } }> } | null };
 
 export type GetStatusErc1155SQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetStatusErc1155SQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, netPrice?: any | null, metadata?: string | null, id: string, from: string, event: string, amounts: any, address: string, nftId: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } }> };
+export type GetStatusErc1155SQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, netPrice?: any | null, metadata?: string | null, id: string, from?: string | null, event: string, amounts: any, address?: string | null, nftId?: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } | null }> };
 
 export type GetStatusErc721SQueryVariables = Exact<{ [key: string]: never; }>;
 
