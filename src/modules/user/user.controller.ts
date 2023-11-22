@@ -39,4 +39,9 @@ export class UserController {
     return await this.userServiceExtend.getNFTByUser(id)
   }
 
+  @Get('/collection/:id')
+  async getCollectionWithUserID(@Param('id') id : string){
+    return await this.userServiceExtend.getCollectionByUser(id);
+  }
+
 }
