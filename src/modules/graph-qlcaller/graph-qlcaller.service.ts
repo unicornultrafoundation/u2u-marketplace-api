@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGraphQlcallerDto } from './dto/create-graph-qlcaller.dto';
 import { UpdateGraphQlcallerDto } from './dto/update-graph-qlcaller.dto';
-import { getSdk, GetCollectionsQueryVariables } from '../../generated/graphql'
+// import { getSdk, GetCollectionsQueryVariables } from '../../generated/graphql'
 import { GraphQLClient } from 'graphql-request';
 @Injectable()
 export class GraphQlcallerService {
@@ -11,12 +11,12 @@ export class GraphQlcallerService {
     return new GraphQLClient(this.endpoint);
   }
   async getCollections(first: number) {
-    const client = this.getGraphqlClient();
-    const sdk = getSdk(client);
-    const variables: GetCollectionsQueryVariables = { first };
+    // const client = this.getGraphqlClient();
+    // const sdk = getSdk(client);
+    // const variables: GetCollectionsQueryVariables = { first };
     try {
-      const response = await sdk.GetCollections(variables);
-      return response;
+    //   const response = await sdk.GetCollections(variables);
+      return
     } catch (err) {
       console.error(err);
       throw err; 

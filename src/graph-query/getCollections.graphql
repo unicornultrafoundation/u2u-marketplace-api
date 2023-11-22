@@ -1,18 +1,18 @@
-# src/graph-query/getCollections.graphql
+# # src/graph-query/getCollections.graphql
 
-query GetCollections($first: Int!) {
-    collections {
-      id
-      type
-      txCreation
-      symbol
-      parent
-      owner
-      name
-      minters
-      meta
-      features
-      bestSellOrder
-      bestBidOrder
-    }
-  }   
+# query GetCollections($first: Int!) {
+#     collections {
+#       id
+#       type
+#       txCreation
+#       symbol
+#       parent
+#       owner
+#       name
+#       minters
+#       meta
+#       features
+#       bestSellOrder
+#       bestBidOrder
+#     }
+#   }   

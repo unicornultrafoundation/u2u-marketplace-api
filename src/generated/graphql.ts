@@ -25,38 +25,16 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
-  ERC721operatorOperator: Array<Erc721Operator>;
-  ERC721operatorOwner: Array<Erc721Operator>;
   ERC721tokens: Array<Erc721Token>;
   ERC721transferFromEvent: Array<Erc721Transfer>;
   ERC721transferToEvent: Array<Erc721Transfer>;
   ERC1155balances: Array<Erc1155Balance>;
-  ERC1155operatorOperator: Array<Erc1155Operator>;
-  ERC1155operatorOwner: Array<Erc1155Operator>;
   ERC1155transferFromEvent: Array<Erc1155Transfer>;
   ERC1155transferToEvent: Array<Erc1155Transfer>;
   asERC721?: Maybe<Erc721Contract>;
   asERC1155?: Maybe<Erc1155Contract>;
   events: Array<Event>;
   id: Scalars['String']['output'];
-};
-
-
-export type AccountErc721operatorOperatorArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc721Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Erc721Operator_Filter>;
-};
-
-
-export type AccountErc721operatorOwnerArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc721Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Erc721Operator_Filter>;
 };
 
 
@@ -96,24 +74,6 @@ export type AccountErc1155balancesArgs = {
 };
 
 
-export type AccountErc1155operatorOperatorArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc1155Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Erc1155Operator_Filter>;
-};
-
-
-export type AccountErc1155operatorOwnerArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc1155Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Erc1155Operator_Filter>;
-};
-
-
 export type AccountErc1155transferFromEventArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Erc1155Transfer_OrderBy>;
@@ -141,14 +101,10 @@ export type AccountEventsArgs = {
 };
 
 export type Account_Filter = {
-  ERC721operatorOperator_?: InputMaybe<Erc721Operator_Filter>;
-  ERC721operatorOwner_?: InputMaybe<Erc721Operator_Filter>;
   ERC721tokens_?: InputMaybe<Erc721Token_Filter>;
   ERC721transferFromEvent_?: InputMaybe<Erc721Transfer_Filter>;
   ERC721transferToEvent_?: InputMaybe<Erc721Transfer_Filter>;
   ERC1155balances_?: InputMaybe<Erc1155Balance_Filter>;
-  ERC1155operatorOperator_?: InputMaybe<Erc1155Operator_Filter>;
-  ERC1155operatorOwner_?: InputMaybe<Erc1155Operator_Filter>;
   ERC1155transferFromEvent_?: InputMaybe<Erc1155Transfer_Filter>;
   ERC1155transferToEvent_?: InputMaybe<Erc1155Transfer_Filter>;
   /** Filter for the block changed event. */
@@ -221,14 +177,10 @@ export type Account_Filter = {
 };
 
 export enum Account_OrderBy {
-  Erc721operatorOperator = 'ERC721operatorOperator',
-  Erc721operatorOwner = 'ERC721operatorOwner',
   Erc721tokens = 'ERC721tokens',
   Erc721transferFromEvent = 'ERC721transferFromEvent',
   Erc721transferToEvent = 'ERC721transferToEvent',
   Erc1155balances = 'ERC1155balances',
-  Erc1155operatorOperator = 'ERC1155operatorOperator',
-  Erc1155operatorOwner = 'ERC1155operatorOwner',
   Erc1155transferFromEvent = 'ERC1155transferFromEvent',
   Erc1155transferToEvent = 'ERC1155transferToEvent',
   AsErc721 = 'asERC721',
@@ -236,8 +188,12 @@ export enum Account_OrderBy {
   AsErc721Name = 'asERC721__name',
   AsErc721SupportsMetadata = 'asERC721__supportsMetadata',
   AsErc721Symbol = 'asERC721__symbol',
+  AsErc721TxCreation = 'asERC721__txCreation',
   AsErc1155 = 'asERC1155',
   AsErc1155Id = 'asERC1155__id',
+  AsErc1155Name = 'asERC1155__name',
+  AsErc1155Symbol = 'asERC1155__symbol',
+  AsErc1155TxCreation = 'asERC1155__txCreation',
   Events = 'events',
   Id = 'id'
 }
@@ -299,246 +255,6 @@ export enum Block_OrderBy {
   Id = 'id',
   Number = 'number',
   Time = 'time'
-}
-
-export type Collection = {
-  __typename?: 'Collection';
-  bestBidOrder?: Maybe<Scalars['String']['output']>;
-  bestSellOrder?: Maybe<Scalars['String']['output']>;
-  features?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  meta?: Maybe<Scalars['String']['output']>;
-  minters?: Maybe<Array<Scalars['String']['output']>>;
-  name?: Maybe<Scalars['String']['output']>;
-  owner?: Maybe<Scalars['String']['output']>;
-  parent?: Maybe<Scalars['ID']['output']>;
-  symbol?: Maybe<Scalars['String']['output']>;
-  txCreation: Scalars['String']['output'];
-  type?: Maybe<Scalars['String']['output']>;
-};
-
-export type Collection_Filter = {
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Collection_Filter>>>;
-  bestBidOrder?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_contains?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_ends_with?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_gt?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_gte?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  bestBidOrder_lt?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_lte?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_not?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_not_contains?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  bestBidOrder_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_starts_with?: InputMaybe<Scalars['String']['input']>;
-  bestBidOrder_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_contains?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_ends_with?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_gt?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_gte?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  bestSellOrder_lt?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_lte?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_not?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_not_contains?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  bestSellOrder_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_starts_with?: InputMaybe<Scalars['String']['input']>;
-  bestSellOrder_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  features?: InputMaybe<Scalars['String']['input']>;
-  features_contains?: InputMaybe<Scalars['String']['input']>;
-  features_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  features_ends_with?: InputMaybe<Scalars['String']['input']>;
-  features_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  features_gt?: InputMaybe<Scalars['String']['input']>;
-  features_gte?: InputMaybe<Scalars['String']['input']>;
-  features_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  features_lt?: InputMaybe<Scalars['String']['input']>;
-  features_lte?: InputMaybe<Scalars['String']['input']>;
-  features_not?: InputMaybe<Scalars['String']['input']>;
-  features_not_contains?: InputMaybe<Scalars['String']['input']>;
-  features_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  features_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  features_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  features_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  features_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  features_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  features_starts_with?: InputMaybe<Scalars['String']['input']>;
-  features_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  id_gt?: InputMaybe<Scalars['ID']['input']>;
-  id_gte?: InputMaybe<Scalars['ID']['input']>;
-  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  id_lt?: InputMaybe<Scalars['ID']['input']>;
-  id_lte?: InputMaybe<Scalars['ID']['input']>;
-  id_not?: InputMaybe<Scalars['ID']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  meta?: InputMaybe<Scalars['String']['input']>;
-  meta_contains?: InputMaybe<Scalars['String']['input']>;
-  meta_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  meta_ends_with?: InputMaybe<Scalars['String']['input']>;
-  meta_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  meta_gt?: InputMaybe<Scalars['String']['input']>;
-  meta_gte?: InputMaybe<Scalars['String']['input']>;
-  meta_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  meta_lt?: InputMaybe<Scalars['String']['input']>;
-  meta_lte?: InputMaybe<Scalars['String']['input']>;
-  meta_not?: InputMaybe<Scalars['String']['input']>;
-  meta_not_contains?: InputMaybe<Scalars['String']['input']>;
-  meta_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  meta_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  meta_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  meta_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  meta_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  meta_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  meta_starts_with?: InputMaybe<Scalars['String']['input']>;
-  meta_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  minters?: InputMaybe<Array<Scalars['String']['input']>>;
-  minters_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  minters_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
-  minters_not?: InputMaybe<Array<Scalars['String']['input']>>;
-  minters_not_contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  minters_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  name_contains?: InputMaybe<Scalars['String']['input']>;
-  name_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  name_ends_with?: InputMaybe<Scalars['String']['input']>;
-  name_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  name_gt?: InputMaybe<Scalars['String']['input']>;
-  name_gte?: InputMaybe<Scalars['String']['input']>;
-  name_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  name_lt?: InputMaybe<Scalars['String']['input']>;
-  name_lte?: InputMaybe<Scalars['String']['input']>;
-  name_not?: InputMaybe<Scalars['String']['input']>;
-  name_not_contains?: InputMaybe<Scalars['String']['input']>;
-  name_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  name_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  name_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  name_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  name_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  name_starts_with?: InputMaybe<Scalars['String']['input']>;
-  name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  or?: InputMaybe<Array<InputMaybe<Collection_Filter>>>;
-  owner?: InputMaybe<Scalars['String']['input']>;
-  owner_contains?: InputMaybe<Scalars['String']['input']>;
-  owner_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_ends_with?: InputMaybe<Scalars['String']['input']>;
-  owner_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_gt?: InputMaybe<Scalars['String']['input']>;
-  owner_gte?: InputMaybe<Scalars['String']['input']>;
-  owner_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  owner_lt?: InputMaybe<Scalars['String']['input']>;
-  owner_lte?: InputMaybe<Scalars['String']['input']>;
-  owner_not?: InputMaybe<Scalars['String']['input']>;
-  owner_not_contains?: InputMaybe<Scalars['String']['input']>;
-  owner_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  owner_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  owner_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  owner_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_starts_with?: InputMaybe<Scalars['String']['input']>;
-  owner_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  parent?: InputMaybe<Scalars['ID']['input']>;
-  parent_gt?: InputMaybe<Scalars['ID']['input']>;
-  parent_gte?: InputMaybe<Scalars['ID']['input']>;
-  parent_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  parent_lt?: InputMaybe<Scalars['ID']['input']>;
-  parent_lte?: InputMaybe<Scalars['ID']['input']>;
-  parent_not?: InputMaybe<Scalars['ID']['input']>;
-  parent_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  symbol?: InputMaybe<Scalars['String']['input']>;
-  symbol_contains?: InputMaybe<Scalars['String']['input']>;
-  symbol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  symbol_ends_with?: InputMaybe<Scalars['String']['input']>;
-  symbol_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  symbol_gt?: InputMaybe<Scalars['String']['input']>;
-  symbol_gte?: InputMaybe<Scalars['String']['input']>;
-  symbol_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  symbol_lt?: InputMaybe<Scalars['String']['input']>;
-  symbol_lte?: InputMaybe<Scalars['String']['input']>;
-  symbol_not?: InputMaybe<Scalars['String']['input']>;
-  symbol_not_contains?: InputMaybe<Scalars['String']['input']>;
-  symbol_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  symbol_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  symbol_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  symbol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  symbol_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  symbol_starts_with?: InputMaybe<Scalars['String']['input']>;
-  symbol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  txCreation?: InputMaybe<Scalars['String']['input']>;
-  txCreation_contains?: InputMaybe<Scalars['String']['input']>;
-  txCreation_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  txCreation_ends_with?: InputMaybe<Scalars['String']['input']>;
-  txCreation_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  txCreation_gt?: InputMaybe<Scalars['String']['input']>;
-  txCreation_gte?: InputMaybe<Scalars['String']['input']>;
-  txCreation_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  txCreation_lt?: InputMaybe<Scalars['String']['input']>;
-  txCreation_lte?: InputMaybe<Scalars['String']['input']>;
-  txCreation_not?: InputMaybe<Scalars['String']['input']>;
-  txCreation_not_contains?: InputMaybe<Scalars['String']['input']>;
-  txCreation_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  txCreation_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  txCreation_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  txCreation_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  txCreation_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  txCreation_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  txCreation_starts_with?: InputMaybe<Scalars['String']['input']>;
-  txCreation_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<Scalars['String']['input']>;
-  type_contains?: InputMaybe<Scalars['String']['input']>;
-  type_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  type_ends_with?: InputMaybe<Scalars['String']['input']>;
-  type_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  type_gt?: InputMaybe<Scalars['String']['input']>;
-  type_gte?: InputMaybe<Scalars['String']['input']>;
-  type_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  type_lt?: InputMaybe<Scalars['String']['input']>;
-  type_lte?: InputMaybe<Scalars['String']['input']>;
-  type_not?: InputMaybe<Scalars['String']['input']>;
-  type_not_contains?: InputMaybe<Scalars['String']['input']>;
-  type_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  type_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  type_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  type_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  type_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  type_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  type_starts_with?: InputMaybe<Scalars['String']['input']>;
-  type_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-};
-
-export enum Collection_OrderBy {
-  BestBidOrder = 'bestBidOrder',
-  BestSellOrder = 'bestSellOrder',
-  Features = 'features',
-  Id = 'id',
-  Meta = 'meta',
-  Minters = 'minters',
-  Name = 'name',
-  Owner = 'owner',
-  Parent = 'parent',
-  Symbol = 'symbol',
-  TxCreation = 'txCreation',
-  Type = 'type'
 }
 
 export enum ContractType {
@@ -609,20 +325,11 @@ export type Erc721Contract = {
   asAccount: Account;
   id: Scalars['String']['output'];
   name?: Maybe<Scalars['String']['output']>;
-  operators: Array<Erc721Operator>;
   supportsMetadata?: Maybe<Scalars['Boolean']['output']>;
   symbol?: Maybe<Scalars['String']['output']>;
   tokens: Array<Erc721Token>;
   transfers: Array<Erc721Transfer>;
-};
-
-
-export type Erc721ContractOperatorsArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc721Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Erc721Operator_Filter>;
+  txCreation: Scalars['String']['output'];
 };
 
 
@@ -708,7 +415,6 @@ export type Erc721Contract_Filter = {
   name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   name_starts_with?: InputMaybe<Scalars['String']['input']>;
   name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operators_?: InputMaybe<Erc721Operator_Filter>;
   or?: InputMaybe<Array<InputMaybe<Erc721Contract_Filter>>>;
   supportsMetadata?: InputMaybe<Scalars['Boolean']['input']>;
   supportsMetadata_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
@@ -736,6 +442,26 @@ export type Erc721Contract_Filter = {
   symbol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   tokens_?: InputMaybe<Erc721Token_Filter>;
   transfers_?: InputMaybe<Erc721Transfer_Filter>;
+  txCreation?: InputMaybe<Scalars['String']['input']>;
+  txCreation_contains?: InputMaybe<Scalars['String']['input']>;
+  txCreation_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_ends_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_gt?: InputMaybe<Scalars['String']['input']>;
+  txCreation_gte?: InputMaybe<Scalars['String']['input']>;
+  txCreation_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  txCreation_lt?: InputMaybe<Scalars['String']['input']>;
+  txCreation_lte?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_contains?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  txCreation_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_starts_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum Erc721Contract_OrderBy {
@@ -743,11 +469,11 @@ export enum Erc721Contract_OrderBy {
   AsAccountId = 'asAccount__id',
   Id = 'id',
   Name = 'name',
-  Operators = 'operators',
   SupportsMetadata = 'supportsMetadata',
   Symbol = 'symbol',
   Tokens = 'tokens',
-  Transfers = 'transfers'
+  Transfers = 'transfers',
+  TxCreation = 'txCreation'
 }
 
 export type Erc721Creator = {
@@ -833,111 +559,6 @@ export enum Erc721Creator_OrderBy {
   CreatorId = 'creator__id',
   Id = 'id',
   Share = 'share'
-}
-
-export type Erc721Operator = {
-  __typename?: 'ERC721Operator';
-  approved: Scalars['Boolean']['output'];
-  contract: Erc721Contract;
-  id: Scalars['ID']['output'];
-  operator: Account;
-  owner: Account;
-};
-
-export type Erc721Operator_Filter = {
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Erc721Operator_Filter>>>;
-  approved?: InputMaybe<Scalars['Boolean']['input']>;
-  approved_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
-  approved_not?: InputMaybe<Scalars['Boolean']['input']>;
-  approved_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
-  contract?: InputMaybe<Scalars['String']['input']>;
-  contract_?: InputMaybe<Erc721Contract_Filter>;
-  contract_contains?: InputMaybe<Scalars['String']['input']>;
-  contract_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_ends_with?: InputMaybe<Scalars['String']['input']>;
-  contract_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_gt?: InputMaybe<Scalars['String']['input']>;
-  contract_gte?: InputMaybe<Scalars['String']['input']>;
-  contract_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  contract_lt?: InputMaybe<Scalars['String']['input']>;
-  contract_lte?: InputMaybe<Scalars['String']['input']>;
-  contract_not?: InputMaybe<Scalars['String']['input']>;
-  contract_not_contains?: InputMaybe<Scalars['String']['input']>;
-  contract_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  contract_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  contract_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  contract_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_starts_with?: InputMaybe<Scalars['String']['input']>;
-  contract_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  id_gt?: InputMaybe<Scalars['ID']['input']>;
-  id_gte?: InputMaybe<Scalars['ID']['input']>;
-  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  id_lt?: InputMaybe<Scalars['ID']['input']>;
-  id_lte?: InputMaybe<Scalars['ID']['input']>;
-  id_not?: InputMaybe<Scalars['ID']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  operator?: InputMaybe<Scalars['String']['input']>;
-  operator_?: InputMaybe<Account_Filter>;
-  operator_contains?: InputMaybe<Scalars['String']['input']>;
-  operator_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_ends_with?: InputMaybe<Scalars['String']['input']>;
-  operator_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_gt?: InputMaybe<Scalars['String']['input']>;
-  operator_gte?: InputMaybe<Scalars['String']['input']>;
-  operator_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  operator_lt?: InputMaybe<Scalars['String']['input']>;
-  operator_lte?: InputMaybe<Scalars['String']['input']>;
-  operator_not?: InputMaybe<Scalars['String']['input']>;
-  operator_not_contains?: InputMaybe<Scalars['String']['input']>;
-  operator_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  operator_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  operator_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  operator_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_starts_with?: InputMaybe<Scalars['String']['input']>;
-  operator_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  or?: InputMaybe<Array<InputMaybe<Erc721Operator_Filter>>>;
-  owner?: InputMaybe<Scalars['String']['input']>;
-  owner_?: InputMaybe<Account_Filter>;
-  owner_contains?: InputMaybe<Scalars['String']['input']>;
-  owner_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_ends_with?: InputMaybe<Scalars['String']['input']>;
-  owner_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_gt?: InputMaybe<Scalars['String']['input']>;
-  owner_gte?: InputMaybe<Scalars['String']['input']>;
-  owner_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  owner_lt?: InputMaybe<Scalars['String']['input']>;
-  owner_lte?: InputMaybe<Scalars['String']['input']>;
-  owner_not?: InputMaybe<Scalars['String']['input']>;
-  owner_not_contains?: InputMaybe<Scalars['String']['input']>;
-  owner_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  owner_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  owner_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  owner_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_starts_with?: InputMaybe<Scalars['String']['input']>;
-  owner_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-};
-
-export enum Erc721Operator_OrderBy {
-  Approved = 'approved',
-  Contract = 'contract',
-  ContractId = 'contract__id',
-  ContractName = 'contract__name',
-  ContractSupportsMetadata = 'contract__supportsMetadata',
-  ContractSymbol = 'contract__symbol',
-  Id = 'id',
-  Operator = 'operator',
-  OperatorId = 'operator__id',
-  Owner = 'owner',
-  OwnerId = 'owner__id'
 }
 
 export type Erc721Token = {
@@ -1107,6 +728,7 @@ export enum Erc721Token_OrderBy {
   ContractName = 'contract__name',
   ContractSupportsMetadata = 'contract__supportsMetadata',
   ContractSymbol = 'contract__symbol',
+  ContractTxCreation = 'contract__txCreation',
   Creators = 'creators',
   Id = 'id',
   Identifier = 'identifier',
@@ -1284,6 +906,7 @@ export enum Erc721Transfer_OrderBy {
   ContractName = 'contract__name',
   ContractSupportsMetadata = 'contract__supportsMetadata',
   ContractSymbol = 'contract__symbol',
+  ContractTxCreation = 'contract__txCreation',
   Emitter = 'emitter',
   EmitterId = 'emitter__id',
   From = 'from',
@@ -1434,6 +1057,9 @@ export enum Erc1155Balance_OrderBy {
   AccountId = 'account__id',
   Contract = 'contract',
   ContractId = 'contract__id',
+  ContractName = 'contract__name',
+  ContractSymbol = 'contract__symbol',
+  ContractTxCreation = 'contract__txCreation',
   Id = 'id',
   Token = 'token',
   TokenId = 'token__id',
@@ -1451,9 +1077,11 @@ export type Erc1155Contract = {
   asAccount: Account;
   balances: Array<Erc1155Balance>;
   id: Scalars['String']['output'];
-  operators: Array<Erc1155Operator>;
+  name?: Maybe<Scalars['String']['output']>;
+  symbol?: Maybe<Scalars['String']['output']>;
   tokens: Array<Erc1155Token>;
   transfers: Array<Erc1155Transfer>;
+  txCreation: Scalars['String']['output'];
 };
 
 
@@ -1463,15 +1091,6 @@ export type Erc1155ContractBalancesArgs = {
   orderDirection?: InputMaybe<OrderDirection>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<Erc1155Balance_Filter>;
-};
-
-
-export type Erc1155ContractOperatorsArgs = {
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc1155Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  where?: InputMaybe<Erc1155Operator_Filter>;
 };
 
 
@@ -1538,10 +1157,69 @@ export type Erc1155Contract_Filter = {
   id_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   id_starts_with?: InputMaybe<Scalars['String']['input']>;
   id_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operators_?: InputMaybe<Erc1155Operator_Filter>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  name_contains?: InputMaybe<Scalars['String']['input']>;
+  name_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_ends_with?: InputMaybe<Scalars['String']['input']>;
+  name_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_gt?: InputMaybe<Scalars['String']['input']>;
+  name_gte?: InputMaybe<Scalars['String']['input']>;
+  name_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  name_lt?: InputMaybe<Scalars['String']['input']>;
+  name_lte?: InputMaybe<Scalars['String']['input']>;
+  name_not?: InputMaybe<Scalars['String']['input']>;
+  name_not_contains?: InputMaybe<Scalars['String']['input']>;
+  name_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  name_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  name_starts_with?: InputMaybe<Scalars['String']['input']>;
+  name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   or?: InputMaybe<Array<InputMaybe<Erc1155Contract_Filter>>>;
+  symbol?: InputMaybe<Scalars['String']['input']>;
+  symbol_contains?: InputMaybe<Scalars['String']['input']>;
+  symbol_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  symbol_ends_with?: InputMaybe<Scalars['String']['input']>;
+  symbol_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  symbol_gt?: InputMaybe<Scalars['String']['input']>;
+  symbol_gte?: InputMaybe<Scalars['String']['input']>;
+  symbol_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  symbol_lt?: InputMaybe<Scalars['String']['input']>;
+  symbol_lte?: InputMaybe<Scalars['String']['input']>;
+  symbol_not?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_contains?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  symbol_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  symbol_starts_with?: InputMaybe<Scalars['String']['input']>;
+  symbol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   tokens_?: InputMaybe<Erc1155Token_Filter>;
   transfers_?: InputMaybe<Erc1155Transfer_Filter>;
+  txCreation?: InputMaybe<Scalars['String']['input']>;
+  txCreation_contains?: InputMaybe<Scalars['String']['input']>;
+  txCreation_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_ends_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_gt?: InputMaybe<Scalars['String']['input']>;
+  txCreation_gte?: InputMaybe<Scalars['String']['input']>;
+  txCreation_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  txCreation_lt?: InputMaybe<Scalars['String']['input']>;
+  txCreation_lte?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_contains?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
+  txCreation_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  txCreation_starts_with?: InputMaybe<Scalars['String']['input']>;
+  txCreation_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum Erc1155Contract_OrderBy {
@@ -1549,9 +1227,11 @@ export enum Erc1155Contract_OrderBy {
   AsAccountId = 'asAccount__id',
   Balances = 'balances',
   Id = 'id',
-  Operators = 'operators',
+  Name = 'name',
+  Symbol = 'symbol',
   Tokens = 'tokens',
-  Transfers = 'transfers'
+  Transfers = 'transfers',
+  TxCreation = 'txCreation'
 }
 
 export type Erc1155Creator = {
@@ -1637,108 +1317,6 @@ export enum Erc1155Creator_OrderBy {
   CreatorId = 'creator__id',
   Id = 'id',
   Share = 'share'
-}
-
-export type Erc1155Operator = {
-  __typename?: 'ERC1155Operator';
-  approved: Scalars['Boolean']['output'];
-  contract: Erc1155Contract;
-  id: Scalars['ID']['output'];
-  operator: Account;
-  owner: Account;
-};
-
-export type Erc1155Operator_Filter = {
-  /** Filter for the block changed event. */
-  _change_block?: InputMaybe<BlockChangedFilter>;
-  and?: InputMaybe<Array<InputMaybe<Erc1155Operator_Filter>>>;
-  approved?: InputMaybe<Scalars['Boolean']['input']>;
-  approved_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
-  approved_not?: InputMaybe<Scalars['Boolean']['input']>;
-  approved_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
-  contract?: InputMaybe<Scalars['String']['input']>;
-  contract_?: InputMaybe<Erc1155Contract_Filter>;
-  contract_contains?: InputMaybe<Scalars['String']['input']>;
-  contract_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_ends_with?: InputMaybe<Scalars['String']['input']>;
-  contract_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_gt?: InputMaybe<Scalars['String']['input']>;
-  contract_gte?: InputMaybe<Scalars['String']['input']>;
-  contract_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  contract_lt?: InputMaybe<Scalars['String']['input']>;
-  contract_lte?: InputMaybe<Scalars['String']['input']>;
-  contract_not?: InputMaybe<Scalars['String']['input']>;
-  contract_not_contains?: InputMaybe<Scalars['String']['input']>;
-  contract_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  contract_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  contract_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  contract_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  contract_starts_with?: InputMaybe<Scalars['String']['input']>;
-  contract_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  id_gt?: InputMaybe<Scalars['ID']['input']>;
-  id_gte?: InputMaybe<Scalars['ID']['input']>;
-  id_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  id_lt?: InputMaybe<Scalars['ID']['input']>;
-  id_lte?: InputMaybe<Scalars['ID']['input']>;
-  id_not?: InputMaybe<Scalars['ID']['input']>;
-  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>;
-  operator?: InputMaybe<Scalars['String']['input']>;
-  operator_?: InputMaybe<Account_Filter>;
-  operator_contains?: InputMaybe<Scalars['String']['input']>;
-  operator_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_ends_with?: InputMaybe<Scalars['String']['input']>;
-  operator_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_gt?: InputMaybe<Scalars['String']['input']>;
-  operator_gte?: InputMaybe<Scalars['String']['input']>;
-  operator_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  operator_lt?: InputMaybe<Scalars['String']['input']>;
-  operator_lte?: InputMaybe<Scalars['String']['input']>;
-  operator_not?: InputMaybe<Scalars['String']['input']>;
-  operator_not_contains?: InputMaybe<Scalars['String']['input']>;
-  operator_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  operator_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  operator_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  operator_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  operator_starts_with?: InputMaybe<Scalars['String']['input']>;
-  operator_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  or?: InputMaybe<Array<InputMaybe<Erc1155Operator_Filter>>>;
-  owner?: InputMaybe<Scalars['String']['input']>;
-  owner_?: InputMaybe<Account_Filter>;
-  owner_contains?: InputMaybe<Scalars['String']['input']>;
-  owner_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_ends_with?: InputMaybe<Scalars['String']['input']>;
-  owner_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_gt?: InputMaybe<Scalars['String']['input']>;
-  owner_gte?: InputMaybe<Scalars['String']['input']>;
-  owner_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  owner_lt?: InputMaybe<Scalars['String']['input']>;
-  owner_lte?: InputMaybe<Scalars['String']['input']>;
-  owner_not?: InputMaybe<Scalars['String']['input']>;
-  owner_not_contains?: InputMaybe<Scalars['String']['input']>;
-  owner_not_contains_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_not_ends_with?: InputMaybe<Scalars['String']['input']>;
-  owner_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_not_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  owner_not_starts_with?: InputMaybe<Scalars['String']['input']>;
-  owner_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-  owner_starts_with?: InputMaybe<Scalars['String']['input']>;
-  owner_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
-};
-
-export enum Erc1155Operator_OrderBy {
-  Approved = 'approved',
-  Contract = 'contract',
-  ContractId = 'contract__id',
-  Id = 'id',
-  Operator = 'operator',
-  OperatorId = 'operator__id',
-  Owner = 'owner',
-  OwnerId = 'owner__id'
 }
 
 export type Erc1155Token = {
@@ -1893,6 +1471,9 @@ export enum Erc1155Token_OrderBy {
   Balances = 'balances',
   Contract = 'contract',
   ContractId = 'contract__id',
+  ContractName = 'contract__name',
+  ContractSymbol = 'contract__symbol',
+  ContractTxCreation = 'contract__txCreation',
   Creators = 'creators',
   Id = 'id',
   Identifier = 'identifier',
@@ -2131,6 +1712,9 @@ export type Erc1155Transfer_Filter = {
 export enum Erc1155Transfer_OrderBy {
   Contract = 'contract',
   ContractId = 'contract__id',
+  ContractName = 'contract__name',
+  ContractSymbol = 'contract__symbol',
+  ContractTxCreation = 'contract__txCreation',
   Emitter = 'emitter',
   EmitterId = 'emitter__id',
   From = 'from',
@@ -2480,14 +2064,15 @@ export enum MarketEvent721_OrderBy {
 
 export type MarketEvent1155 = {
   __typename?: 'MarketEvent1155';
-  address: Scalars['String']['output'];
+  address?: Maybe<Scalars['String']['output']>;
   amounts: Scalars['BigInt']['output'];
   event: Scalars['String']['output'];
-  from: Scalars['String']['output'];
+  from?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   metadata?: Maybe<Scalars['String']['output']>;
   netPrice?: Maybe<Scalars['BigInt']['output']>;
-  nftId: Erc1155Token;
+  nftId?: Maybe<Erc1155Token>;
+  operationId: Scalars['BigInt']['output'];
   price?: Maybe<Scalars['BigInt']['output']>;
   quoteToken?: Maybe<Scalars['String']['output']>;
   timestamp: Scalars['BigInt']['output'];
@@ -2624,6 +2209,14 @@ export type MarketEvent1155_Filter = {
   nftId_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
   nftId_starts_with?: InputMaybe<Scalars['String']['input']>;
   nftId_starts_with_nocase?: InputMaybe<Scalars['String']['input']>;
+  operationId?: InputMaybe<Scalars['BigInt']['input']>;
+  operationId_gt?: InputMaybe<Scalars['BigInt']['input']>;
+  operationId_gte?: InputMaybe<Scalars['BigInt']['input']>;
+  operationId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
+  operationId_lt?: InputMaybe<Scalars['BigInt']['input']>;
+  operationId_lte?: InputMaybe<Scalars['BigInt']['input']>;
+  operationId_not?: InputMaybe<Scalars['BigInt']['input']>;
+  operationId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>;
   or?: InputMaybe<Array<InputMaybe<MarketEvent1155_Filter>>>;
   price?: InputMaybe<Scalars['BigInt']['input']>;
   price_gt?: InputMaybe<Scalars['BigInt']['input']>;
@@ -2716,6 +2309,7 @@ export enum MarketEvent1155_OrderBy {
   NftIdIdentifier = 'nftId__identifier',
   NftIdTxCreation = 'nftId__txCreation',
   NftIdUri = 'nftId__uri',
+  OperationId = 'operationId',
   Price = 'price',
   QuoteToken = 'quoteToken',
   Timestamp = 'timestamp',
@@ -2737,16 +2331,12 @@ export type Query = {
   accounts: Array<Account>;
   block?: Maybe<Block>;
   blocks: Array<Block>;
-  collection?: Maybe<Collection>;
-  collections: Array<Collection>;
   creator?: Maybe<Creator>;
   creators: Array<Creator>;
   erc721Contract?: Maybe<Erc721Contract>;
   erc721Contracts: Array<Erc721Contract>;
   erc721Creator?: Maybe<Erc721Creator>;
   erc721Creators: Array<Erc721Creator>;
-  erc721Operator?: Maybe<Erc721Operator>;
-  erc721Operators: Array<Erc721Operator>;
   erc721Token?: Maybe<Erc721Token>;
   erc721Tokens: Array<Erc721Token>;
   erc721Transfer?: Maybe<Erc721Transfer>;
@@ -2757,8 +2347,6 @@ export type Query = {
   erc1155Contracts: Array<Erc1155Contract>;
   erc1155Creator?: Maybe<Erc1155Creator>;
   erc1155Creators: Array<Erc1155Creator>;
-  erc1155Operator?: Maybe<Erc1155Operator>;
-  erc1155Operators: Array<Erc1155Operator>;
   erc1155Token?: Maybe<Erc1155Token>;
   erc1155Tokens: Array<Erc1155Token>;
   erc1155Transfer?: Maybe<Erc1155Transfer>;
@@ -2815,24 +2403,6 @@ export type QueryBlocksArgs = {
 };
 
 
-export type QueryCollectionArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryCollectionsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Collection_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Collection_Filter>;
-};
-
-
 export type QueryCreatorArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
@@ -2884,24 +2454,6 @@ export type QueryErc721CreatorsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Erc721Creator_Filter>;
-};
-
-
-export type QueryErc721OperatorArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryErc721OperatorsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc721Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Erc721Operator_Filter>;
 };
 
 
@@ -2992,24 +2544,6 @@ export type QueryErc1155CreatorsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Erc1155Creator_Filter>;
-};
-
-
-export type QueryErc1155OperatorArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type QueryErc1155OperatorsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc1155Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Erc1155Operator_Filter>;
 };
 
 
@@ -3128,16 +2662,12 @@ export type Subscription = {
   accounts: Array<Account>;
   block?: Maybe<Block>;
   blocks: Array<Block>;
-  collection?: Maybe<Collection>;
-  collections: Array<Collection>;
   creator?: Maybe<Creator>;
   creators: Array<Creator>;
   erc721Contract?: Maybe<Erc721Contract>;
   erc721Contracts: Array<Erc721Contract>;
   erc721Creator?: Maybe<Erc721Creator>;
   erc721Creators: Array<Erc721Creator>;
-  erc721Operator?: Maybe<Erc721Operator>;
-  erc721Operators: Array<Erc721Operator>;
   erc721Token?: Maybe<Erc721Token>;
   erc721Tokens: Array<Erc721Token>;
   erc721Transfer?: Maybe<Erc721Transfer>;
@@ -3148,8 +2678,6 @@ export type Subscription = {
   erc1155Contracts: Array<Erc1155Contract>;
   erc1155Creator?: Maybe<Erc1155Creator>;
   erc1155Creators: Array<Erc1155Creator>;
-  erc1155Operator?: Maybe<Erc1155Operator>;
-  erc1155Operators: Array<Erc1155Operator>;
   erc1155Token?: Maybe<Erc1155Token>;
   erc1155Tokens: Array<Erc1155Token>;
   erc1155Transfer?: Maybe<Erc1155Transfer>;
@@ -3206,24 +2734,6 @@ export type SubscriptionBlocksArgs = {
 };
 
 
-export type SubscriptionCollectionArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionCollectionsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Collection_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Collection_Filter>;
-};
-
-
 export type SubscriptionCreatorArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID']['input'];
@@ -3275,24 +2785,6 @@ export type SubscriptionErc721CreatorsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Erc721Creator_Filter>;
-};
-
-
-export type SubscriptionErc721OperatorArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionErc721OperatorsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc721Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Erc721Operator_Filter>;
 };
 
 
@@ -3383,24 +2875,6 @@ export type SubscriptionErc1155CreatorsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Erc1155Creator_Filter>;
-};
-
-
-export type SubscriptionErc1155OperatorArgs = {
-  block?: InputMaybe<Block_Height>;
-  id: Scalars['ID']['input'];
-  subgraphError?: _SubgraphErrorPolicy_;
-};
-
-
-export type SubscriptionErc1155OperatorsArgs = {
-  block?: InputMaybe<Block_Height>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Erc1155Operator_OrderBy>;
-  orderDirection?: InputMaybe<OrderDirection>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  subgraphError?: _SubgraphErrorPolicy_;
-  where?: InputMaybe<Erc1155Operator_Filter>;
 };
 
 
@@ -3689,9 +3163,6 @@ export type ResolversTypes = {
   Block_orderBy: Block_OrderBy;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Bytes: ResolverTypeWrapper<Scalars['Bytes']['output']>;
-  Collection: ResolverTypeWrapper<Collection>;
-  Collection_filter: Collection_Filter;
-  Collection_orderBy: Collection_OrderBy;
   ContractType: ContractType;
   Creator: ResolverTypeWrapper<Creator>;
   Creator_filter: Creator_Filter;
@@ -3703,9 +3174,6 @@ export type ResolversTypes = {
   ERC721Creator: ResolverTypeWrapper<Erc721Creator>;
   ERC721Creator_filter: Erc721Creator_Filter;
   ERC721Creator_orderBy: Erc721Creator_OrderBy;
-  ERC721Operator: ResolverTypeWrapper<Erc721Operator>;
-  ERC721Operator_filter: Erc721Operator_Filter;
-  ERC721Operator_orderBy: Erc721Operator_OrderBy;
   ERC721Token: ResolverTypeWrapper<Erc721Token>;
   ERC721Token_filter: Erc721Token_Filter;
   ERC721Token_orderBy: Erc721Token_OrderBy;
@@ -3721,9 +3189,6 @@ export type ResolversTypes = {
   ERC1155Creator: ResolverTypeWrapper<Erc1155Creator>;
   ERC1155Creator_filter: Erc1155Creator_Filter;
   ERC1155Creator_orderBy: Erc1155Creator_OrderBy;
-  ERC1155Operator: ResolverTypeWrapper<Erc1155Operator>;
-  ERC1155Operator_filter: Erc1155Operator_Filter;
-  ERC1155Operator_orderBy: Erc1155Operator_OrderBy;
   ERC1155Token: ResolverTypeWrapper<Erc1155Token>;
   ERC1155Token_filter: Erc1155Token_Filter;
   ERC1155Token_orderBy: Erc1155Token_OrderBy;
@@ -3767,16 +3232,12 @@ export type ResolversParentTypes = {
   Block_height: Block_Height;
   Boolean: Scalars['Boolean']['output'];
   Bytes: Scalars['Bytes']['output'];
-  Collection: Collection;
-  Collection_filter: Collection_Filter;
   Creator: Creator;
   Creator_filter: Creator_Filter;
   ERC721Contract: Erc721Contract;
   ERC721Contract_filter: Erc721Contract_Filter;
   ERC721Creator: Erc721Creator;
   ERC721Creator_filter: Erc721Creator_Filter;
-  ERC721Operator: Erc721Operator;
-  ERC721Operator_filter: Erc721Operator_Filter;
   ERC721Token: Erc721Token;
   ERC721Token_filter: Erc721Token_Filter;
   ERC721Transfer: Erc721Transfer;
@@ -3787,8 +3248,6 @@ export type ResolversParentTypes = {
   ERC1155Contract_filter: Erc1155Contract_Filter;
   ERC1155Creator: Erc1155Creator;
   ERC1155Creator_filter: Erc1155Creator_Filter;
-  ERC1155Operator: Erc1155Operator;
-  ERC1155Operator_filter: Erc1155Operator_Filter;
   ERC1155Token: Erc1155Token;
   ERC1155Token_filter: Erc1155Token_Filter;
   ERC1155Transfer: Erc1155Transfer;
@@ -3829,14 +3288,10 @@ export type SubgraphIdDirectiveArgs = {
 export type SubgraphIdDirectiveResolver<Result, Parent, ContextType = any, Args = SubgraphIdDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
-  ERC721operatorOperator?: Resolver<Array<ResolversTypes['ERC721Operator']>, ParentType, ContextType, RequireFields<AccountErc721operatorOperatorArgs, 'first' | 'skip'>>;
-  ERC721operatorOwner?: Resolver<Array<ResolversTypes['ERC721Operator']>, ParentType, ContextType, RequireFields<AccountErc721operatorOwnerArgs, 'first' | 'skip'>>;
   ERC721tokens?: Resolver<Array<ResolversTypes['ERC721Token']>, ParentType, ContextType, RequireFields<AccountErc721tokensArgs, 'first' | 'skip'>>;
   ERC721transferFromEvent?: Resolver<Array<ResolversTypes['ERC721Transfer']>, ParentType, ContextType, RequireFields<AccountErc721transferFromEventArgs, 'first' | 'skip'>>;
   ERC721transferToEvent?: Resolver<Array<ResolversTypes['ERC721Transfer']>, ParentType, ContextType, RequireFields<AccountErc721transferToEventArgs, 'first' | 'skip'>>;
   ERC1155balances?: Resolver<Array<ResolversTypes['ERC1155Balance']>, ParentType, ContextType, RequireFields<AccountErc1155balancesArgs, 'first' | 'skip'>>;
-  ERC1155operatorOperator?: Resolver<Array<ResolversTypes['ERC1155Operator']>, ParentType, ContextType, RequireFields<AccountErc1155operatorOperatorArgs, 'first' | 'skip'>>;
-  ERC1155operatorOwner?: Resolver<Array<ResolversTypes['ERC1155Operator']>, ParentType, ContextType, RequireFields<AccountErc1155operatorOwnerArgs, 'first' | 'skip'>>;
   ERC1155transferFromEvent?: Resolver<Array<ResolversTypes['ERC1155Transfer']>, ParentType, ContextType, RequireFields<AccountErc1155transferFromEventArgs, 'first' | 'skip'>>;
   ERC1155transferToEvent?: Resolver<Array<ResolversTypes['ERC1155Transfer']>, ParentType, ContextType, RequireFields<AccountErc1155transferToEventArgs, 'first' | 'skip'>>;
   asERC721?: Resolver<Maybe<ResolversTypes['ERC721Contract']>, ParentType, ContextType>;
@@ -3865,22 +3320,6 @@ export interface BytesScalarConfig extends GraphQLScalarTypeConfig<ResolversType
   name: 'Bytes';
 }
 
-export type CollectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Collection'] = ResolversParentTypes['Collection']> = {
-  bestBidOrder?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  bestSellOrder?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  features?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  meta?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  minters?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  owner?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  parent?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  symbol?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  txCreation?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type CreatorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Creator'] = ResolversParentTypes['Creator']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   token721?: Resolver<Array<ResolversTypes['ERC721Creator']>, ParentType, ContextType, RequireFields<CreatorToken721Args, 'first' | 'skip'>>;
@@ -3892,11 +3331,11 @@ export type Erc721ContractResolvers<ContextType = any, ParentType extends Resolv
   asAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  operators?: Resolver<Array<ResolversTypes['ERC721Operator']>, ParentType, ContextType, RequireFields<Erc721ContractOperatorsArgs, 'first' | 'skip'>>;
   supportsMetadata?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   symbol?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   tokens?: Resolver<Array<ResolversTypes['ERC721Token']>, ParentType, ContextType, RequireFields<Erc721ContractTokensArgs, 'first' | 'skip'>>;
   transfers?: Resolver<Array<ResolversTypes['ERC721Transfer']>, ParentType, ContextType, RequireFields<Erc721ContractTransfersArgs, 'first' | 'skip'>>;
+  txCreation?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3905,15 +3344,6 @@ export type Erc721CreatorResolvers<ContextType = any, ParentType extends Resolve
   creator?: Resolver<ResolversTypes['Creator'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   share?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type Erc721OperatorResolvers<ContextType = any, ParentType extends ResolversParentTypes['ERC721Operator'] = ResolversParentTypes['ERC721Operator']> = {
-  approved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  contract?: Resolver<ResolversTypes['ERC721Contract'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  operator?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
-  owner?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3958,9 +3388,11 @@ export type Erc1155ContractResolvers<ContextType = any, ParentType extends Resol
   asAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
   balances?: Resolver<Array<ResolversTypes['ERC1155Balance']>, ParentType, ContextType, RequireFields<Erc1155ContractBalancesArgs, 'first' | 'skip'>>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  operators?: Resolver<Array<ResolversTypes['ERC1155Operator']>, ParentType, ContextType, RequireFields<Erc1155ContractOperatorsArgs, 'first' | 'skip'>>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  symbol?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   tokens?: Resolver<Array<ResolversTypes['ERC1155Token']>, ParentType, ContextType, RequireFields<Erc1155ContractTokensArgs, 'first' | 'skip'>>;
   transfers?: Resolver<Array<ResolversTypes['ERC1155Transfer']>, ParentType, ContextType, RequireFields<Erc1155ContractTransfersArgs, 'first' | 'skip'>>;
+  txCreation?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3969,15 +3401,6 @@ export type Erc1155CreatorResolvers<ContextType = any, ParentType extends Resolv
   creator?: Resolver<ResolversTypes['Creator'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   share?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type Erc1155OperatorResolvers<ContextType = any, ParentType extends ResolversParentTypes['ERC1155Operator'] = ResolversParentTypes['ERC1155Operator']> = {
-  approved?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  contract?: Resolver<ResolversTypes['ERC1155Contract'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  operator?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
-  owner?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -4039,14 +3462,15 @@ export type MarketEvent721Resolvers<ContextType = any, ParentType extends Resolv
 };
 
 export type MarketEvent1155Resolvers<ContextType = any, ParentType extends ResolversParentTypes['MarketEvent1155'] = ResolversParentTypes['MarketEvent1155']> = {
-  address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   amounts?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   event?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  from?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  from?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   metadata?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   netPrice?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  nftId?: Resolver<ResolversTypes['ERC1155Token'], ParentType, ContextType>;
+  nftId?: Resolver<Maybe<ResolversTypes['ERC1155Token']>, ParentType, ContextType>;
+  operationId?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
   price?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   quoteToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   timestamp?: Resolver<ResolversTypes['BigInt'], ParentType, ContextType>;
@@ -4061,16 +3485,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   accounts?: Resolver<Array<ResolversTypes['Account']>, ParentType, ContextType, RequireFields<QueryAccountsArgs, 'first' | 'skip' | 'subgraphError'>>;
   block?: Resolver<Maybe<ResolversTypes['Block']>, ParentType, ContextType, RequireFields<QueryBlockArgs, 'id' | 'subgraphError'>>;
   blocks?: Resolver<Array<ResolversTypes['Block']>, ParentType, ContextType, RequireFields<QueryBlocksArgs, 'first' | 'skip' | 'subgraphError'>>;
-  collection?: Resolver<Maybe<ResolversTypes['Collection']>, ParentType, ContextType, RequireFields<QueryCollectionArgs, 'id' | 'subgraphError'>>;
-  collections?: Resolver<Array<ResolversTypes['Collection']>, ParentType, ContextType, RequireFields<QueryCollectionsArgs, 'first' | 'skip' | 'subgraphError'>>;
   creator?: Resolver<Maybe<ResolversTypes['Creator']>, ParentType, ContextType, RequireFields<QueryCreatorArgs, 'id' | 'subgraphError'>>;
   creators?: Resolver<Array<ResolversTypes['Creator']>, ParentType, ContextType, RequireFields<QueryCreatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Contract?: Resolver<Maybe<ResolversTypes['ERC721Contract']>, ParentType, ContextType, RequireFields<QueryErc721ContractArgs, 'id' | 'subgraphError'>>;
   erc721Contracts?: Resolver<Array<ResolversTypes['ERC721Contract']>, ParentType, ContextType, RequireFields<QueryErc721ContractsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Creator?: Resolver<Maybe<ResolversTypes['ERC721Creator']>, ParentType, ContextType, RequireFields<QueryErc721CreatorArgs, 'id' | 'subgraphError'>>;
   erc721Creators?: Resolver<Array<ResolversTypes['ERC721Creator']>, ParentType, ContextType, RequireFields<QueryErc721CreatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
-  erc721Operator?: Resolver<Maybe<ResolversTypes['ERC721Operator']>, ParentType, ContextType, RequireFields<QueryErc721OperatorArgs, 'id' | 'subgraphError'>>;
-  erc721Operators?: Resolver<Array<ResolversTypes['ERC721Operator']>, ParentType, ContextType, RequireFields<QueryErc721OperatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Token?: Resolver<Maybe<ResolversTypes['ERC721Token']>, ParentType, ContextType, RequireFields<QueryErc721TokenArgs, 'id' | 'subgraphError'>>;
   erc721Tokens?: Resolver<Array<ResolversTypes['ERC721Token']>, ParentType, ContextType, RequireFields<QueryErc721TokensArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Transfer?: Resolver<Maybe<ResolversTypes['ERC721Transfer']>, ParentType, ContextType, RequireFields<QueryErc721TransferArgs, 'id' | 'subgraphError'>>;
@@ -4081,8 +3501,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   erc1155Contracts?: Resolver<Array<ResolversTypes['ERC1155Contract']>, ParentType, ContextType, RequireFields<QueryErc1155ContractsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc1155Creator?: Resolver<Maybe<ResolversTypes['ERC1155Creator']>, ParentType, ContextType, RequireFields<QueryErc1155CreatorArgs, 'id' | 'subgraphError'>>;
   erc1155Creators?: Resolver<Array<ResolversTypes['ERC1155Creator']>, ParentType, ContextType, RequireFields<QueryErc1155CreatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
-  erc1155Operator?: Resolver<Maybe<ResolversTypes['ERC1155Operator']>, ParentType, ContextType, RequireFields<QueryErc1155OperatorArgs, 'id' | 'subgraphError'>>;
-  erc1155Operators?: Resolver<Array<ResolversTypes['ERC1155Operator']>, ParentType, ContextType, RequireFields<QueryErc1155OperatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc1155Token?: Resolver<Maybe<ResolversTypes['ERC1155Token']>, ParentType, ContextType, RequireFields<QueryErc1155TokenArgs, 'id' | 'subgraphError'>>;
   erc1155Tokens?: Resolver<Array<ResolversTypes['ERC1155Token']>, ParentType, ContextType, RequireFields<QueryErc1155TokensArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc1155Transfer?: Resolver<Maybe<ResolversTypes['ERC1155Transfer']>, ParentType, ContextType, RequireFields<QueryErc1155TransferArgs, 'id' | 'subgraphError'>>;
@@ -4103,16 +3521,12 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
   accounts?: SubscriptionResolver<Array<ResolversTypes['Account']>, "accounts", ParentType, ContextType, RequireFields<SubscriptionAccountsArgs, 'first' | 'skip' | 'subgraphError'>>;
   block?: SubscriptionResolver<Maybe<ResolversTypes['Block']>, "block", ParentType, ContextType, RequireFields<SubscriptionBlockArgs, 'id' | 'subgraphError'>>;
   blocks?: SubscriptionResolver<Array<ResolversTypes['Block']>, "blocks", ParentType, ContextType, RequireFields<SubscriptionBlocksArgs, 'first' | 'skip' | 'subgraphError'>>;
-  collection?: SubscriptionResolver<Maybe<ResolversTypes['Collection']>, "collection", ParentType, ContextType, RequireFields<SubscriptionCollectionArgs, 'id' | 'subgraphError'>>;
-  collections?: SubscriptionResolver<Array<ResolversTypes['Collection']>, "collections", ParentType, ContextType, RequireFields<SubscriptionCollectionsArgs, 'first' | 'skip' | 'subgraphError'>>;
   creator?: SubscriptionResolver<Maybe<ResolversTypes['Creator']>, "creator", ParentType, ContextType, RequireFields<SubscriptionCreatorArgs, 'id' | 'subgraphError'>>;
   creators?: SubscriptionResolver<Array<ResolversTypes['Creator']>, "creators", ParentType, ContextType, RequireFields<SubscriptionCreatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Contract?: SubscriptionResolver<Maybe<ResolversTypes['ERC721Contract']>, "erc721Contract", ParentType, ContextType, RequireFields<SubscriptionErc721ContractArgs, 'id' | 'subgraphError'>>;
   erc721Contracts?: SubscriptionResolver<Array<ResolversTypes['ERC721Contract']>, "erc721Contracts", ParentType, ContextType, RequireFields<SubscriptionErc721ContractsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Creator?: SubscriptionResolver<Maybe<ResolversTypes['ERC721Creator']>, "erc721Creator", ParentType, ContextType, RequireFields<SubscriptionErc721CreatorArgs, 'id' | 'subgraphError'>>;
   erc721Creators?: SubscriptionResolver<Array<ResolversTypes['ERC721Creator']>, "erc721Creators", ParentType, ContextType, RequireFields<SubscriptionErc721CreatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
-  erc721Operator?: SubscriptionResolver<Maybe<ResolversTypes['ERC721Operator']>, "erc721Operator", ParentType, ContextType, RequireFields<SubscriptionErc721OperatorArgs, 'id' | 'subgraphError'>>;
-  erc721Operators?: SubscriptionResolver<Array<ResolversTypes['ERC721Operator']>, "erc721Operators", ParentType, ContextType, RequireFields<SubscriptionErc721OperatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Token?: SubscriptionResolver<Maybe<ResolversTypes['ERC721Token']>, "erc721Token", ParentType, ContextType, RequireFields<SubscriptionErc721TokenArgs, 'id' | 'subgraphError'>>;
   erc721Tokens?: SubscriptionResolver<Array<ResolversTypes['ERC721Token']>, "erc721Tokens", ParentType, ContextType, RequireFields<SubscriptionErc721TokensArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc721Transfer?: SubscriptionResolver<Maybe<ResolversTypes['ERC721Transfer']>, "erc721Transfer", ParentType, ContextType, RequireFields<SubscriptionErc721TransferArgs, 'id' | 'subgraphError'>>;
@@ -4123,8 +3537,6 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
   erc1155Contracts?: SubscriptionResolver<Array<ResolversTypes['ERC1155Contract']>, "erc1155Contracts", ParentType, ContextType, RequireFields<SubscriptionErc1155ContractsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc1155Creator?: SubscriptionResolver<Maybe<ResolversTypes['ERC1155Creator']>, "erc1155Creator", ParentType, ContextType, RequireFields<SubscriptionErc1155CreatorArgs, 'id' | 'subgraphError'>>;
   erc1155Creators?: SubscriptionResolver<Array<ResolversTypes['ERC1155Creator']>, "erc1155Creators", ParentType, ContextType, RequireFields<SubscriptionErc1155CreatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
-  erc1155Operator?: SubscriptionResolver<Maybe<ResolversTypes['ERC1155Operator']>, "erc1155Operator", ParentType, ContextType, RequireFields<SubscriptionErc1155OperatorArgs, 'id' | 'subgraphError'>>;
-  erc1155Operators?: SubscriptionResolver<Array<ResolversTypes['ERC1155Operator']>, "erc1155Operators", ParentType, ContextType, RequireFields<SubscriptionErc1155OperatorsArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc1155Token?: SubscriptionResolver<Maybe<ResolversTypes['ERC1155Token']>, "erc1155Token", ParentType, ContextType, RequireFields<SubscriptionErc1155TokenArgs, 'id' | 'subgraphError'>>;
   erc1155Tokens?: SubscriptionResolver<Array<ResolversTypes['ERC1155Token']>, "erc1155Tokens", ParentType, ContextType, RequireFields<SubscriptionErc1155TokensArgs, 'first' | 'skip' | 'subgraphError'>>;
   erc1155Transfer?: SubscriptionResolver<Maybe<ResolversTypes['ERC1155Transfer']>, "erc1155Transfer", ParentType, ContextType, RequireFields<SubscriptionErc1155TransferArgs, 'id' | 'subgraphError'>>;
@@ -4167,17 +3579,14 @@ export type Resolvers<ContextType = any> = {
   BigInt?: GraphQLScalarType;
   Block?: BlockResolvers<ContextType>;
   Bytes?: GraphQLScalarType;
-  Collection?: CollectionResolvers<ContextType>;
   Creator?: CreatorResolvers<ContextType>;
   ERC721Contract?: Erc721ContractResolvers<ContextType>;
   ERC721Creator?: Erc721CreatorResolvers<ContextType>;
-  ERC721Operator?: Erc721OperatorResolvers<ContextType>;
   ERC721Token?: Erc721TokenResolvers<ContextType>;
   ERC721Transfer?: Erc721TransferResolvers<ContextType>;
   ERC1155Balance?: Erc1155BalanceResolvers<ContextType>;
   ERC1155Contract?: Erc1155ContractResolvers<ContextType>;
   ERC1155Creator?: Erc1155CreatorResolvers<ContextType>;
-  ERC1155Operator?: Erc1155OperatorResolvers<ContextType>;
   ERC1155Token?: Erc1155TokenResolvers<ContextType>;
   ERC1155Transfer?: Erc1155TransferResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
@@ -4198,24 +3607,6 @@ export type DirectiveResolvers<ContextType = any> = {
 };
 
 
-export const GetCollectionsDocument = gql`
-    query GetCollections($first: Int!) {
-  collections {
-    id
-    type
-    txCreation
-    symbol
-    parent
-    owner
-    name
-    minters
-    meta
-    features
-    bestSellOrder
-    bestBidOrder
-  }
-}
-    `;
 export const GetNfTwithAccountIdDocument = gql`
     query getNFTwithAccountID($id: ID!) {
   account(id: $id) {
@@ -4229,6 +3620,11 @@ export const GetNfTwithAccountIdDocument = gql`
       valueExact
       value
       id
+      token {
+        id
+        txCreation
+        uri
+      }
     }
   }
 }
@@ -4286,9 +3682,6 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    GetCollections(variables: GetCollectionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCollectionsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetCollectionsQuery>(GetCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCollections', 'query');
-    },
     getNFTwithAccountID(variables: GetNfTwithAccountIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetNfTwithAccountIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNfTwithAccountIdQuery>(GetNfTwithAccountIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTwithAccountID', 'query');
     },
@@ -4301,24 +3694,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-export type GetCollectionsQueryVariables = Exact<{
-  first: Scalars['Int']['input'];
-}>;
-
-
-export type GetCollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, type?: string | null, txCreation: string, symbol?: string | null, parent?: string | null, owner?: string | null, name?: string | null, minters?: Array<string> | null, meta?: string | null, features?: string | null, bestSellOrder?: string | null, bestBidOrder?: string | null }> };
-
 export type GetNfTwithAccountIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, ERC721tokens: Array<{ __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string }>, ERC1155balances: Array<{ __typename?: 'ERC1155Balance', valueExact: any, value: any, id: string }> } | null };
+export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, ERC721tokens: Array<{ __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string }>, ERC1155balances: Array<{ __typename?: 'ERC1155Balance', valueExact: any, value: any, id: string, token: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } }> } | null };
 
 export type GetStatusErc1155SQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetStatusErc1155SQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, netPrice?: any | null, metadata?: string | null, id: string, from: string, event: string, amounts: any, address: string, nftId: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } }> };
+export type GetStatusErc1155SQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, netPrice?: any | null, metadata?: string | null, id: string, from?: string | null, event: string, amounts: any, address?: string | null, nftId?: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } | null }> };
 
 export type GetStatusErc721SQueryVariables = Exact<{ [key: string]: never; }>;
 
