@@ -36,8 +36,8 @@ export class CollectionController {
     return this.collectionService.remove(id);
   }
   
-  @Get("/user/:id")
-  findByUserID(@Param('id') id : string){
-    return this.collectionService.findWithUserID(id);
-  }
+  // @Get("/user/:id")
+  // findByUserID(@Param('id') id : string){
+  //   return this.collectionService.findWithUserID(id);
+  // }
 }

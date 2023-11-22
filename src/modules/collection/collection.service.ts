@@ -51,7 +51,7 @@ export class CollectionService {
     }
   }
 
-  async findAll(): Promise<CollectionEntity[]> {
+  async findAll(): Promise<any[]> {
     return this.prisma.collection.findMany({
       include : {
         creators : {
@@ -74,7 +74,7 @@ export class CollectionService {
     })
   }
 
-  async findOne(id: string): Promise<CollectionEntity> {
+  async findOne(id: string): Promise<any> {
     try{
       if (!isValidUUID(id)) {
         throw new Error('Invalid ID. Please try again !');
@@ -168,7 +168,7 @@ export class CollectionService {
     } 
   }
 
-  async update(id: string, input: UpdateCollectionDto): Promise<CollectionEntity> {
+  async update(id: string, input: UpdateCollectionDto): Promise<any> {
     try {
       if (!isValidUUID(id)) {
         throw new Error('Invalid ID. Please try again !');
@@ -187,7 +187,6 @@ export class CollectionService {
       throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
     }
   }
-
   async remove(id: string): Promise<any> {
     try{
       throw new Error('Coming Soon');
@@ -196,55 +195,10 @@ export class CollectionService {
       //   throw new Error('Cannot find Collection. Please try again !');
       // }
       // return this.prisma.collection.delete({
-      //   where: {ss
+      //   where: {
       //     id: id
       //   }
       // });
-    }catch(error){
-      throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async findWithUserID(id : string) : Promise<any []>{
-    try{
-      if (!isValidUUID(id)) {
-        throw new Error('Invalid User. Please try again !');
-      }
-      let checkExist = await this.prisma.user.findFirst({ where: { id: id } });
-      if (!checkExist) {
-        throw new NotFoundException()
-      }
-      return this.prisma.user.findMany({
-        where : {
-          id : id
-        },
-        include : {
-          nftCollection : {
-            select : {
-              collection : {
-                select : {
-                  id : true,
-                  txCreationHash : true,
-                  name : true,
-                  symbol : true,
-                  description : true,
-                  status : true,
-                  type : true,
-                  categoryId : true,
-                  createdAt : true,
-                  category : {
-                    select : {
-                      id : true,
-                      name : true,
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      })
-
     }catch(error){
       throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
     }
