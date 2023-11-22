@@ -54,7 +54,7 @@ export class CollectionService {
     }
   }
 
-  async findAll(): Promise<CollectionEntity[]> {
+  async findAll(): Promise<any[]> {
     return this.prisma.collection.findMany({
       include : {
         creators : {
@@ -160,7 +160,7 @@ export class CollectionService {
     } 
   }
 
-  async update(id: string, input: UpdateCollectionDto): Promise<CollectionEntity> {
+  async update(id: string, input: UpdateCollectionDto): Promise<any> {
     try {
       if (!isValidUUID(id)) {
         throw new Error('Invalid ID. Please try again !');
@@ -179,7 +179,6 @@ export class CollectionService {
       throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
     }
   }
-
   async remove(id: string): Promise<any> {
     try{
       throw new Error('Coming Soon');
@@ -188,7 +187,7 @@ export class CollectionService {
       //   throw new Error('Cannot find Collection. Please try again !');
       // }
       // return this.prisma.collection.delete({
-      //   where: {ss
+      //   where: {
       //     id: id
       //   }
       // });
