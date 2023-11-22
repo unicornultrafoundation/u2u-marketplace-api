@@ -3674,6 +3674,68 @@ export const GetOneNftSellInfoDocument = gql`
     to
     from
   }
+    `;
+export const GetNfTwithAccountIdDocument = gql`
+    query getNFTwithAccountID($id: ID!) {
+  account(id: $id) {
+    id
+    ERC721tokens {
+      uri
+      txCreation
+      id
+    }
+    ERC1155balances {
+      valueExact
+      value
+      id
+    }
+  }
+}
+    `;
+export const GetStatusErc1155SDocument = gql`
+    query getStatusERC1155S {
+  marketEvent1155S {
+    txHash
+    to
+    timestamp
+    quoteToken
+    price
+    netPrice
+    metadata
+    id
+    from
+    event
+    amounts
+    address
+    nftId {
+      id
+      txCreation
+      uri
+    }
+  }
+}
+    `;
+export const GetStatusErc721SDocument = gql`
+    query getStatusERC721S {
+  marketEvent721S {
+    txHash
+    to
+    timestamp
+    quoteToken
+    price
+    id
+    from
+    event
+    address
+    netPrice
+    metadata
+    nftId {
+      uri
+      txCreation
+      id
+    }
+>>>>>>> 7c8ac33 (commit save)
+  }
 }
     `;
 
@@ -3692,6 +3754,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetOneNFTSellInfo(variables: GetOneNftSellInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetOneNftSellInfoQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetOneNftSellInfoQuery>(GetOneNftSellInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetOneNFTSellInfo', 'query');
+    },
+    getNFTwithAccountID(variables: GetNfTwithAccountIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetNfTwithAccountIdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetNfTwithAccountIdQuery>(GetNfTwithAccountIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTwithAccountID', 'query');
+    },
+    getStatusERC1155S(variables?: GetStatusErc1155SQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetStatusErc1155SQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetStatusErc1155SQuery>(GetStatusErc1155SDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getStatusERC1155S', 'query');
+    },
+    getStatusERC721S(variables?: GetStatusErc721SQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetStatusErc721SQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetStatusErc721SQuery>(GetStatusErc721SDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getStatusERC721S', 'query');
     }
   };
 }
@@ -3720,3 +3791,22 @@ export type GetOneNftSellInfoQueryVariables = Exact<{
 
 
 export type GetOneNftSellInfoQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', id: string, event: SellStatus, price?: any | null, to?: string | null, from?: string | null, nftId?: { __typename?: 'ERC1155Token', id: string } | null }>, marketEvent721S: Array<{ __typename?: 'MarketEvent721', id: string, event: SellStatus, price?: any | null, to?: string | null, from: string, nftId: { __typename?: 'ERC721Token', id: string } }> };
+
+export type GetCollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, type?: string | null, txCreation: string, symbol?: string | null, parent?: string | null, owner?: string | null, name?: string | null, minters?: Array<string> | null, meta?: string | null, features?: string | null, bestSellOrder?: string | null, bestBidOrder?: string | null }> };
+
+export type GetNfTwithAccountIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, ERC721tokens: Array<{ __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string }>, ERC1155balances: Array<{ __typename?: 'ERC1155Balance', valueExact: any, value: any, id: string }> } | null };
+
+export type GetStatusErc1155SQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStatusErc1155SQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, netPrice?: any | null, metadata?: string | null, id: string, from: string, event: string, amounts: any, address: string, nftId: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } }> };
+
+export type GetStatusErc721SQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStatusErc721SQuery = { __typename?: 'Query', marketEvent721S: Array<{ __typename?: 'MarketEvent721', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, id: string, from: string, event: string, address: string, netPrice?: any | null, metadata?: string | null, nftId: { __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string } }> };
