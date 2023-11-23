@@ -1,0 +1,15 @@
+query getERC721Contracts {
+  erc721Contracts {
+    txCreation
+    symbol
+    name
+    id
+    supportsMetadata
+    # tokens {
+    #   uri
+    #   txCreation
+    #   identifier
+    #   id
+    # }
+  }
+}

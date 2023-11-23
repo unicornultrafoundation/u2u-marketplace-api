@@ -1,0 +1,18 @@
+query getERC1155Contracts {
+  erc1155Contracts {
+    txCreation
+    symbol
+    name
+    id
+    # balances {
+    #   valueExact
+    #   value
+    #   id
+    #   token {
+    #     uri
+    #     txCreation
+    #     id
+    #   }
+    # }
+  }
+}
