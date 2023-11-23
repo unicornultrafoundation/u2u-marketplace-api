@@ -4,14 +4,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TX_STATUS } from '@prisma/client';
 import { GetAllUser } from './dto/get-all-user.dto';
+import { FilterNFTUserDetail } from './dto/get-nft-user.dto';
+
 import { GraphQLClient } from 'graphql-request';
 import { getSdk, GetNfTwithAccountIdQueryVariables } from '../../generated/graphql'
 import { validate as isValidUUID } from 'uuid'
+import { NFTType } from 'src/constants/enums/NFTType.enum';
 interface NFT {
   id?: string;
   name?: string;
   ipfsHash?: string;
-  traits?: string;
+  // traits?: Traits[];
   createdAt?: Date;
   updatedAt?: Date;
   status?: TX_STATUS;
@@ -21,7 +24,6 @@ interface NFT {
   collectionId?: string
   creator?: USER
 }
-
 
 interface USER {
   id: string;
@@ -71,55 +73,72 @@ export class UserServiceExtend {
   private getGraphqlClient() {
     return new GraphQLClient(this.endpoint);
   }
-  private minifyUserObjecct (user : any) : any{
-    delete user.signature;
-    delete user.signer;
-    delete user.acceptedTerms;
-    delete user.signedMessage;
-    delete user.nftsOwnership;
-    return user;
+  // Remove few prop secret
+  private minifyUserObjecct(user: any): any {
+    const propertiesToRemove = ['signature', 'signer', 'signedMessage', 'nftsOwnership' , 'nftCreator'];
+    const minifiedUser = { ...user };
+    for (const property in minifiedUser) {
+      if (propertiesToRemove.includes(property)) {
+        delete minifiedUser[property];
+      }
+    }
+    return minifiedUser;
   }
 
-  async getNFTByUser(id: string): Promise<Result> {
+  async getNFTByUser(id: string, filter: FilterNFTUserDetail): Promise<Result> {
     try {
+      const { type } = filter;
       if (!isValidUUID(id)) {
         throw new Error('Invalid ID. Please try again !');
       }
-      const [userData] = await Promise.all([
+      const [userData, NFTList] = await Promise.all([
         this.prisma.user.findUnique({
           where: { id },
           include: {
-            nftsOwnership: {
+            nftCreator: type === NFTType.CREATOR ? {
               select: {
-                quantity: true,
-                nft: {
+                id: true,
+                name: true,
+                ipfsHash: true,
+                createdAt: true,
+                updatedAt: true,
+                status: true,
+                tokenUri: true,
+                txCreationHash: true,
+                collectionId: true,
+                traits: {
                   select: {
                     id: true,
-                    name: true,
-                    ipfsHash: true,
-                    traits: true,
-                    createdAt: true,
-                    updatedAt: true,
-                    status: true,
-                    tokenUri: true,
-                    txCreationHash: true,
-                    collectionId: true,
-                    creatorId: true,
-                    creator: {
-                      select: {
-                        id: true,
-                        email: true,
-                        avatar: true,
-                        username: true,
-                        publicKey: true,
-                      }
-                    }
+                    value: true,
+                    display_type: true,
+                    trait_type: true
                   }
-                }
+                },
               }
-            }
+            } : false
           }
         }),
+        this.prisma.nFT.findMany({
+          select: {
+            id: true,
+            name: true,
+            ipfsHash: true,
+            createdAt: true,
+            updatedAt: true,
+            status: true,
+            tokenUri: true,
+            txCreationHash: true,
+            collectionId: true,
+            traits: {
+              select: {
+                id: true,
+                value: true,
+                display_type: true,
+                trait_type: true
+              }
+            },
+          }
+        })
       ]);
 
       if (!userData) {
@@ -127,11 +146,9 @@ export class UserServiceExtend {
       }
       const { publicKey } = userData;
       const { statusERC721S = [], statusERC1155S = [], ERC721tokens = [], ERC1155balances = [] } = await this.getOnChainDataNFT(publicKey);
-      let { nftsOwnership = [] } = (userData || {});
-
-      const mergedERC721 = this.mergeERCData721(ERC721tokens, nftsOwnership, statusERC721S);
-      const mergedERC1155 = this.mergeERCData1155(ERC1155balances, nftsOwnership, statusERC1155S);
-      
+      const {nftCreator = []} = userData;
+      const mergedERC721 = this.mergeERCData(ERC721tokens, NFTList ,statusERC721S, nftCreator, type);
+      const mergedERC1155 = this.mergeERCData(ERC1155balances, NFTList, statusERC1155S, nftCreator,type);
       return { ...this.minifyUserObjecct(userData), ERC721tokens: mergedERC721, ERC1155balances: mergedERC1155 };
     } catch (err) {
       console.error(err);
@@ -147,25 +164,19 @@ export class UserServiceExtend {
     return { ERC721tokens: account?.ERC721tokens || [], ERC1155balances: account?.ERC1155balances || [], statusERC721S, statusERC1155S };
   }
 
-  mergeERCData721(tokens: any[], nftsOwnership: NFTOwnership[], status: any[]): any[] {
-    return nftsOwnership.map((nft) => {
-      const matchingNFT = tokens.find((token) => nft?.nft?.id === token.id);
-      const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
-      delete matchingNFTStatus.nftId;
-      return matchingNFT ? { value : (nft?.quantity || 0),...nft?.nft , status : (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status) } : {...nft?.nft}
+   mergeERCData(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
+    const mapFunction = type === NFTType.CREATOR ? nftCreator : tokens;
+    return mapFunction.map(token => {
+      const matchingNFT = type === NFTType.CREATOR ? {} : NFTList.find(nft => nft.id === token.id);
+      const matchingNFTStatus = (status.find(status => status?.nftId?.id === token.id) || {});
+      return {
+        ...matchingNFT,
+        ...matchingNFTStatus,
+        ...token,
+      };
     });
   }
-
-
-  mergeERCData1155(tokens: any[], nftsOwnership: NFTOwnership[], status: any[]): any[] {
-    return nftsOwnership.map((nft) => {
-      const matchingNFT = tokens.find((token) => nft?.nft?.id === token?.token?.id);
-      const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
-      delete matchingNFTStatus.nftId;
-      return matchingNFT ? { value : (matchingNFT?.valueExact || 0) ,...nft?.nft , status : (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status ) , market : matchingNFTStatus } : {...nft?.nft}
-    });
-  }
-
+  
   async getCollectionByUser(id: string): Promise<any> {
     try {
       if (!isValidUUID(id)) {
@@ -199,17 +210,17 @@ export class UserServiceExtend {
           }
         }
       })
-      if(!userData){
+      if (!userData) {
         throw new NotFoundException();
       }
-      let {nftCollection : nftCollecionOffChain = []} = (userData || {});
-      let [erc721Contracts , erc1155Contracts  ] = await this.getCollectionOnChain();
+      let { nftCollection: nftCollecionOffChain = [] } = (userData || {});
+      let [erc721Contracts, erc1155Contracts] = await this.getCollectionOnChain();
 
-      let nftCollection721 = await this.mergeERC721Contracts(erc721Contracts , nftCollecionOffChain);
-      let nftCollection1155 = await this.mergeERC1155Contracts(erc1155Contracts , nftCollecionOffChain);
- 
+      let nftCollection721 = await this.mergeERC721Contracts(erc721Contracts, nftCollecionOffChain);
+      let nftCollection1155 = await this.mergeERC1155Contracts(erc1155Contracts, nftCollecionOffChain);
+
       delete userData.nftCollection;
-      return {...userData , erc721Contracts : nftCollection721 , erc1155Contracts : nftCollection1155 };
+      return { ...userData, erc721Contracts: nftCollection721, erc1155Contracts: nftCollection1155 };
     } catch (err) {
       console.error(err);
       throw err;
@@ -217,26 +228,41 @@ export class UserServiceExtend {
   }
 
 
-  async getCollectionOnChain() : Promise<any[]> {
+  async getCollectionOnChain(): Promise<any[]> {
     const sdk = getSdk(this.client);
-    const {erc721Contracts = []} = await sdk.getERC721Contracts();
-    const {erc1155Contracts = []} = await sdk.getERC1155Contracts();
-    return [erc721Contracts , erc1155Contracts]
+    const { erc721Contracts = [] } = await sdk.getERC721Contracts();
+    const { erc1155Contracts = [] } = await sdk.getERC1155Contracts();
+    return [erc721Contracts, erc1155Contracts]
   }
 
-  mergeERC721Contracts (dataOnChain : any[], dataOffChain : any[]){
-    return dataOffChain.map(off =>{
-      let {collection} = off;
+  mergeERC721Contracts(dataOnChain: any[], dataOffChain: any[]) {
+    return dataOffChain.map(off => {
+      let { collection } = off;
       let matchingCollection = (dataOnChain || []).find(on => collection.txCreationHash == on.txCreation);
-      return matchingCollection ? {...collection , dataOnChain : matchingCollection} : {...collection , dataOnChain : {}}
+      return matchingCollection ? { ...collection, dataOnChain: matchingCollection } : { ...collection, dataOnChain: {} }
     })
   }
 
-  mergeERC1155Contracts (dataOnChain : any[], dataOffChain : any[]){
-    return dataOffChain.map(off =>{
-      let {collection} = off;
+  mergeERC1155Contracts(dataOnChain: any[], dataOffChain: any[]) {
+    return dataOffChain.map(off => {
+      let { collection } = off;
       let matchingCollection = (dataOnChain || []).find(on => collection.txCreationHash == on.txCreation);
-      return matchingCollection ? {...collection , dataOnChain : matchingCollection} : {...collection , dataOnChain : {}}
+      return matchingCollection ? { ...collection, dataOnChain: matchingCollection } : { ...collection, dataOnChain: {} }
     })
   }
 }
+
+
+
+    // return nftsOwnership.map((nft) => {
+    //   const matchingNFT = tokens.find((token) => nft?.nft?.id === token.id);
+    //   const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
+    //   delete matchingNFTStatus.nftId;
+    //   return matchingNFT ? { value: (nft?.quantity || 0), ...nft?.nft, status: (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status) } : { ...nft?.nft }
+    // });
+    // return nftsOwnership.map((nft) => {
+    //   const matchingNFT = tokens.find((token) => nft?.nft?.id === token?.token?.id);
+    //   const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
+    //   delete matchingNFTStatus.nftId;
+    //   return matchingNFT ? { value: (matchingNFT?.valueExact || 0), ...nft?.nft, status: (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status) } : { ...nft?.nft }
+    // });
