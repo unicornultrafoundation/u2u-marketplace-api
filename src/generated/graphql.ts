@@ -3607,6 +3607,27 @@ export type DirectiveResolvers<ContextType = any> = {
 };
 
 
+export const GetErc1155ContractsDocument = gql`
+    query getERC1155Contracts {
+  erc1155Contracts {
+    txCreation
+    symbol
+    name
+    id
+  }
+}
+    `;
+export const GetErc721ContractsDocument = gql`
+    query getERC721Contracts {
+  erc721Contracts {
+    txCreation
+    symbol
+    name
+    id
+    supportsMetadata
+  }
+}
+    `;
 export const GetNfTwithAccountIdDocument = gql`
     query getNFTwithAccountID($id: ID!) {
   account(id: $id) {
@@ -3682,6 +3703,12 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    getERC1155Contracts(variables?: GetErc1155ContractsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetErc1155ContractsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetErc1155ContractsQuery>(GetErc1155ContractsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getERC1155Contracts', 'query');
+    },
+    getERC721Contracts(variables?: GetErc721ContractsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetErc721ContractsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetErc721ContractsQuery>(GetErc721ContractsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getERC721Contracts', 'query');
+    },
     getNFTwithAccountID(variables: GetNfTwithAccountIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetNfTwithAccountIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNfTwithAccountIdQuery>(GetNfTwithAccountIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTwithAccountID', 'query');
     },
@@ -3694,6 +3721,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type GetErc1155ContractsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetErc1155ContractsQuery = { __typename?: 'Query', erc1155Contracts: Array<{ __typename?: 'ERC1155Contract', txCreation: string, symbol?: string | null, name?: string | null, id: string }> };
+
+export type GetErc721ContractsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetErc721ContractsQuery = { __typename?: 'Query', erc721Contracts: Array<{ __typename?: 'ERC721Contract', txCreation: string, symbol?: string | null, name?: string | null, id: string, supportsMetadata?: boolean | null }> };
+
 export type GetNfTwithAccountIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
