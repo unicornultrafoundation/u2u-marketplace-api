@@ -81,7 +81,7 @@ export class NftService {
     }
   }
 
-  async findAll(filter: GetAllNftDto): Promise<NftDto[]> {
+  async findAll(filter: GetAllNftDto): Promise<PagingResponse<NftDto>> {
     try {
       let traitsConditions = [];
       
@@ -113,6 +113,8 @@ export class NftService {
       const { marketEvent1155S } = await this.GraphqlService.getNFTsHistory1155(filter.priceMin,filter.priceMax, filter.sellStatus);
       if (!filter.priceMin && !filter.priceMax && !filter.sellStatus) {
       const nfts = await this.prisma.nFT.findMany({
+        skip: (filter.page - 1) * filter.limit,
+        take: filter.limit,
         where: whereCondition,
         include: {
           creator: {
@@ -151,12 +153,24 @@ export class NftService {
             ...(foundItem2 && { price: foundItem2.price, sellStatus: foundItem2.event }),
           };          
         });
-        return mergedArray;
+        const total = await this.prisma.nFT.count({
+          where: whereCondition,
+        });
+        return {
+          data: mergedArray,
+          paging: {
+            total,
+            limit: filter.limit,
+            page: filter.page,
+          }
+        };
       } else {
         whereCondition = {...whereCondition, id: {
           in: marketEvent721S.map(item => item.nftId.id).concat(marketEvent1155S.map(item => item.nftId.id))
         }}
         const nfts = await this.prisma.nFT.findMany({
+          skip: (filter.page - 1) * filter.limit,
+          take: filter.limit,
           where: whereCondition,
           include: {
             creator: {
@@ -196,8 +210,17 @@ export class NftService {
               ...(foundItem2 && { price: foundItem2.price, sellStatus: foundItem2.event }),
             };          
           });
-          
-          return mergedArray;
+          const total = await this.prisma.nFT.count({
+            where: whereCondition,
+          });
+          return {
+            data: mergedArray,
+            paging: {
+              total,
+              limit: filter.limit,
+              page: filter.page,
+            }
+          };
       }
     } catch (error) {
       throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
