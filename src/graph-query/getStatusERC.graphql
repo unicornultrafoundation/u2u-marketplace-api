@@ -1,0 +1,42 @@
+query getStatusERC1155S{
+  marketEvent1155S {
+    txHash
+    to
+    timestamp
+    quoteToken
+    price
+    netPrice
+    metadata
+    id
+    from
+    event
+    amounts
+    address
+    nftId {
+      id
+      txCreation
+      uri
+    }
+  }
+}
+
+query getStatusERC721S{
+  marketEvent721S{
+    txHash
+    to
+    timestamp
+    quoteToken
+    price
+    id
+    from
+    event
+    address
+    netPrice
+    metadata
+    nftId {
+      uri
+      txCreation
+      id
+    }
+  }
+}

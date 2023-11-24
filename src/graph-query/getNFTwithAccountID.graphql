@@ -1,0 +1,19 @@
+query getNFTwithAccountID($id: ID!) {
+  account(id: $id) {
+    id
+    ERC721tokens {
+      uri
+      txCreation
+      id
+    }
+    ERC1155balances {
+      valueExact
+      value
+      id
+      token {
+        id
+        txCreation
+      }
+    }
+  }
+}

@@ -1,9 +1,12 @@
 
 import type { CodegenConfig } from '@graphql-codegen/cli';
 
+import { config as dotenvConfig } from 'dotenv';
+dotenvConfig();
+
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "http://127.0.0.1:8000/subgraphs/name/u2u/marketplace",
+  schema: process.env.SUBGRAPH_URL,
   documents: 'src/**/*.graphql',
   generates: {
     "src/generated/graphql.ts": {
