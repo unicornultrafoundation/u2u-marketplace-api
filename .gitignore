@@ -5,7 +5,7 @@ config.json
 # compiled output
 /dist
 /node_modules
-*/generated
+**/generated
 
 # Logs
 logs
