@@ -3608,71 +3608,6 @@ export type DirectiveResolvers<ContextType = any> = {
 };
 
 
-<<<<<<< HEAD
-export const GetCollectionsDataDocument = gql`
-    query GetCollectionsData($collectionAddress: String) {
-  marketEvent1155S(where: {address: $collectionAddress}) {
-    address
-    netPrice
-    price
-    quoteToken
-    to
-    nftId {
-      contract {
-        id
-      }
-    }
-    event
-  }
-  marketEvent721S(where: {address: $collectionAddress}) {
-    id
-    nftId {
-      contract {
-        id
-      }
-    }
-    address
-    price
-    quoteToken
-    event
-    to
-  }
-}
-    `;
-export const GetCollectionHoldersDocument = gql`
-    query GetCollectionHolders($collectionAddress: String) {
-  erc1155Balances(where: {contract_: {id: $collectionAddress}}) {
-    id
-    value
-    contract {
-      id
-    }
-    account {
-      id
-    }
-  }
-}
-    `;
-export const GetCollectionTokensDocument = gql`
-    query GetCollectionTokens($collectionAddress: String) {
-  erc1155Tokens(where: {contract_: {id: $collectionAddress}}) {
-    id
-    balances {
-      value
-      account {
-        id
-      }
-      contract {
-        id
-      }
-    }
-  }
-  erc721Tokens(where: {contract_: {id: $collectionAddress}}) {
-    id
-    owner {
-      id
-    }
-=======
 export const GetErc1155ContractsDocument = gql`
     query getERC1155Contracts {
   erc1155Contracts {
@@ -3691,7 +3626,6 @@ export const GetErc721ContractsDocument = gql`
     name
     id
     supportsMetadata
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
   }
 }
     `;
@@ -3827,32 +3761,6 @@ export const GetStatusErc721SDocument = gql`
       txCreation
       id
     }
-<<<<<<< HEAD
-    
-  }
-}
-    `;
-  
-    export const GetErc1155ContractsDocument = gql`
-    query getERC1155Contracts {
-  erc1155Contracts {
-    txCreation
-    symbol
-    name
-    id
-  }
-}
-    `;
-export const GetErc721ContractsDocument = gql`
-    query getERC721Contracts {
-  erc721Contracts {
-    txCreation
-    symbol
-    name
-    id
-    supportsMetadata
-=======
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
   }
 }
     `;
@@ -3864,22 +3772,11 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-<<<<<<< HEAD
-    GetCollectionsData(variables?: GetCollectionsDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCollectionsDataQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetCollectionsDataQuery>(GetCollectionsDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCollectionsData', 'query');
-    },
-    GetCollectionHolders(variables?: GetCollectionHoldersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCollectionHoldersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetCollectionHoldersQuery>(GetCollectionHoldersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCollectionHolders', 'query');
-    },
-    GetCollectionTokens(variables?: GetCollectionTokensQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCollectionTokensQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetCollectionTokensQuery>(GetCollectionTokensDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCollectionTokens', 'query');
-=======
     getERC1155Contracts(variables?: GetErc1155ContractsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetErc1155ContractsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetErc1155ContractsQuery>(GetErc1155ContractsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getERC1155Contracts', 'query');
     },
     getERC721Contracts(variables?: GetErc721ContractsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetErc721ContractsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetErc721ContractsQuery>(GetErc721ContractsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getERC721Contracts', 'query');
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
     },
     GetNFTsHistory721(variables?: GetNfTsHistory721QueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetNfTsHistory721Query> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNfTsHistory721Query>(GetNfTsHistory721Document, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetNFTsHistory721', 'query');
@@ -3902,28 +3799,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
-<<<<<<< HEAD
-export type GetCollectionsDataQueryVariables = Exact<{
-  collectionAddress?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type GetCollectionsDataQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', address?: string | null, netPrice?: any | null, price?: any | null, quoteToken?: string | null, to?: string | null, event: SellStatus, nftId?: { __typename?: 'ERC1155Token', contract: { __typename?: 'ERC1155Contract', id: string } } | null }>, marketEvent721S: Array<{ __typename?: 'MarketEvent721', id: string, address: string, price?: any | null, quoteToken?: string | null, event: SellStatus, to?: string | null, nftId: { __typename?: 'ERC721Token', contract: { __typename?: 'ERC721Contract', id: string } } }> };
-
-export type GetCollectionHoldersQueryVariables = Exact<{
-  collectionAddress?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type GetCollectionHoldersQuery = { __typename?: 'Query', erc1155Balances: Array<{ __typename?: 'ERC1155Balance', id: string, value: any, contract?: { __typename?: 'ERC1155Contract', id: string } | null, account?: { __typename?: 'Account', id: string } | null }> };
-
-export type GetCollectionTokensQueryVariables = Exact<{
-  collectionAddress?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type GetCollectionTokensQuery = { __typename?: 'Query', erc1155Tokens: Array<{ __typename?: 'ERC1155Token', id: string, balances: Array<{ __typename?: 'ERC1155Balance', value: any, account?: { __typename?: 'Account', id: string } | null, contract?: { __typename?: 'ERC1155Contract', id: string } | null }> }>, erc721Tokens: Array<{ __typename?: 'ERC721Token', id: string, owner: { __typename?: 'Account', id: string } }> };
-=======
 export type GetErc1155ContractsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3933,7 +3808,6 @@ export type GetErc721ContractsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetErc721ContractsQuery = { __typename?: 'Query', erc721Contracts: Array<{ __typename?: 'ERC721Contract', txCreation: string, symbol?: string | null, name?: string | null, id: string, supportsMetadata?: boolean | null }> };
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
 
 export type GetNfTsHistory721QueryVariables = Exact<{
   minPrice?: InputMaybe<Scalars['BigInt']['input']>;
@@ -3960,21 +3834,6 @@ export type GetOneNftSellInfoQueryVariables = Exact<{
 
 export type GetOneNftSellInfoQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', id: string, event: SellStatus, price?: any | null, to?: string | null, from?: string | null, nftId?: { __typename?: 'ERC1155Token', id: string } | null }>, marketEvent721S: Array<{ __typename?: 'MarketEvent721', id: string, event: SellStatus, price?: any | null, to?: string | null, from: string, nftId: { __typename?: 'ERC721Token', id: string } }> };
 
-<<<<<<< HEAD
-export type GetCollectionsQuery = { __typename?: 'Query', collections: Array<{ __typename?: 'Collection', id: string, type?: string | null, txCreation: string, symbol?: string | null, parent?: string | null, owner?: string | null, name?: string | null, minters?: Array<string> | null, meta?: string | null, features?: string | null, bestSellOrder?: string | null, bestBidOrder?: string | null }> };
-
-export type GetErc1155ContractsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetErc1155ContractsQuery = { __typename?: 'Query', erc1155Contracts: Array<{ __typename?: 'ERC1155Contract', txCreation: string, symbol?: string | null, name?: string | null, id: string }> };
-
-export type GetErc721ContractsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetErc721ContractsQuery = { __typename?: 'Query', erc721Contracts: Array<{ __typename?: 'ERC721Contract', txCreation: string, symbol?: string | null, name?: string | null, id: string, supportsMetadata?: boolean | null }> };
-
-=======
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
 export type GetNfTwithAccountIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -3985,17 +3844,9 @@ export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typ
 export type GetStatusErc1155SQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-<<<<<<< HEAD
-export type GetStatusErc1155SQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, netPrice?: any | null, metadata?: string | null, id: string, from?: string | null, event: string, amounts: any, address?: string | null, nftId?: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } | null }> };
-=======
 export type GetStatusErc1155SQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, netPrice?: any | null, metadata?: string | null, id: string, from?: string | null, event: SellStatus, amounts: any, address?: string | null, nftId?: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } | null }> };
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
 
 export type GetStatusErc721SQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-<<<<<<< HEAD
-export type GetStatusErc721SQuery = { __typename?: 'Query', marketEvent721S: Array<{ __typename?: 'MarketEvent721', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, id: string, from: string, event: string, address: string, netPrice?: any | null, metadata?: string | null, nftId: { __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string } }> };
-=======
 export type GetStatusErc721SQuery = { __typename?: 'Query', marketEvent721S: Array<{ __typename?: 'MarketEvent721', txHash: string, to?: string | null, timestamp: any, quoteToken?: string | null, price?: any | null, id: string, from: string, event: SellStatus, address: string, netPrice?: any | null, metadata?: string | null, nftId: { __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string } }> };
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
