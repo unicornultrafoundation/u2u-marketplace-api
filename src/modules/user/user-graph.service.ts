@@ -10,6 +10,8 @@ import { GraphQLClient } from 'graphql-request';
 import { getSdk, GetNfTwithAccountIdQueryVariables } from '../../generated/graphql'
 import { validate as isValidUUID } from 'uuid'
 import { NFTType } from 'src/constants/enums/NFTType.enum';
+import { SellStatus } from '../../generated/graphql';
+
 interface NFT {
   id?: string;
   name?: string;
@@ -66,10 +68,15 @@ export interface Result {
 
 
 @Injectable()
-export class UserServiceExtend {
+export class UserServiceExtend { 
   constructor(private readonly prisma: PrismaService) { }
+
   private readonly endpoint = process.env.SUBGRAPH_URL;
+  
   private client = this.getGraphqlClient();
+
+  private readonly allowedEvents = [SellStatus.AskNew, SellStatus.Bid, SellStatus.AcceptBid];
+  
   private getGraphqlClient() {
     return new GraphQLClient(this.endpoint);
   }
@@ -147,8 +154,8 @@ export class UserServiceExtend {
       const { publicKey } = userData;
       const { statusERC721S = [], statusERC1155S = [], ERC721tokens = [], ERC1155balances = [] } = await this.getOnChainDataNFT(publicKey);
       const {nftCreator = []} = userData;
-      const mergedERC721 = this.mergeERCData(ERC721tokens, NFTList ,statusERC721S, nftCreator, type);
-      const mergedERC1155 = this.mergeERCData(ERC1155balances, NFTList, statusERC1155S, nftCreator,type);
+      const mergedERC721 = this.mergeERCData721(ERC721tokens, NFTList ,statusERC721S, nftCreator, type);
+      const mergedERC1155 = this.mergeERCData1155(ERC1155balances, NFTList, statusERC1155S, nftCreator,type);
       return { ...this.minifyUserObjecct(userData), ERC721tokens: mergedERC721, ERC1155balances: mergedERC1155 };
     } catch (err) {
       console.error(err);
@@ -164,18 +171,55 @@ export class UserServiceExtend {
     return { ERC721tokens: account?.ERC721tokens || [], ERC1155balances: account?.ERC1155balances || [], statusERC721S, statusERC1155S };
   }
 
-   mergeERCData(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
-    const mapFunction = type === NFTType.CREATOR ? nftCreator : tokens;
-    return mapFunction.map(token => {
-      const matchingNFT = type === NFTType.CREATOR ? {} : NFTList.find(nft => nft.id === token.id);
-      const matchingNFTStatus = (status.find(status => status?.nftId?.id === token.id) || {});
+  mergeERCData1155(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
+    const mergeNFTAndStatus = (token: any, nftList: NFT[], statusList: any[]) => {
+      const tokenId = token?.token?.id || token.id;
+      const matchingNFT = (nftList.find(nft => nft.id === tokenId) || {});
+      const matchingNFTStatus = (statusList.find(status => status?.nftId?.id === tokenId) || {});
       return {
-        ...matchingNFT,
-        ...matchingNFTStatus,
         ...token,
+        ...matchingNFTStatus,
+        ...matchingNFT,
       };
-    });
+    };
+  
+    switch (type) {
+      case NFTType.CREATOR:
+        return nftCreator.map(token => mergeNFTAndStatus(token, nftCreator, status));
+  
+      case NFTType.ON_SALES:
+        const tokenList = tokens.map(token => mergeNFTAndStatus(token, NFTList, status));
+        return tokenList.filter(item => this.allowedEvents.includes(item?.event));
+  
+      default:
+        return tokens.map(token => mergeNFTAndStatus(token, NFTList, status));
+    }
   }
+
+  mergeERCData721(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
+    const mergeNFTAndStatus = (token: any, nftList: NFT[], statusList: any[]) => {
+      const matchingNFT = (nftList.find(nft => nft.id === token.id) || {});
+      const matchingNFTStatus = (statusList.find(status => status?.nftId?.id === token.id) || {});
+      return {
+        ...token,
+        ...matchingNFTStatus,
+        ...matchingNFT,
+      };
+    };
+  
+    switch (type) {
+      case NFTType.CREATOR:
+        return nftCreator.map(token => mergeNFTAndStatus(token, nftCreator, status));
+  
+      case NFTType.ON_SALES:
+        const tokenList = tokens.map(token => mergeNFTAndStatus(token, NFTList, status));
+        return tokenList.filter(item => this.allowedEvents.includes(item?.event));
+  
+      default:
+        return tokens.map(token => mergeNFTAndStatus(token, NFTList, status));
+    }
+  }
+
   
   async getCollectionByUser(id: string): Promise<any> {
     try {
@@ -266,3 +310,35 @@ export class UserServiceExtend {
     //   delete matchingNFTStatus.nftId;
     //   return matchingNFT ? { value: (matchingNFT?.valueExact || 0), ...nft?.nft, status: (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status) } : { ...nft?.nft }
     // });
+
+    //  mergeERCData(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
+    //   const mapFunction = type === NFTType.CREATOR ? nftCreator : tokens;
+    //   return mapFunction.map(token => {
+    //     const matchingNFT = type === NFTType.CREATOR ? {} : NFTList.find(nft => nft.id === token.id);
+    //     const matchingNFTStatus = (status.find(status => status?.nftId?.id === token.id) || {});
+    //     return {
+    //       ...matchingNFT,
+    //       ...matchingNFTStatus,
+    //       ...token,
+    //     };
+    //   });
+    // }
+
+        // return type === NFTType.CREATOR ?    
+    // nftCreator.map(token =>{
+    //   const matchingNFTStatus = (status.find((status) => status?.nftId?.id == token.id) || {});
+    //   return {
+    //     ...token,
+    //     ...matchingNFTStatus,
+    //   };
+    // })
+    // :
+    //  tokens.map(token => {
+    //   const matchingNFT = (NFTList.find(nft => nft.id == token.id) || {});
+    //   const matchingNFTStatus = (status.find((status) => status?.nftId?.id == token.id) || {});
+    //   return {
+    //     ...token,
+    //     ...matchingNFTStatus,
+    //     ...matchingNFT,
+    //   };
+    // })s
