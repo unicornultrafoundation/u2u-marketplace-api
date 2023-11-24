@@ -3608,6 +3608,72 @@ export type DirectiveResolvers<ContextType = any> = {
 };
 
 
+export const GetCollectionsDataDocument = gql`
+    query GetCollectionsData($collectionAddress: String) {
+  marketEvent1155S(where: {address: $collectionAddress}) {
+    address
+    netPrice
+    price
+    quoteToken
+    to
+    nftId {
+      contract {
+        id
+      }
+    }
+    event
+  }
+  marketEvent721S(where: {address: $collectionAddress}) {
+    id
+    nftId {
+      contract {
+        id
+      }
+    }
+    address
+    price
+    quoteToken
+    event
+    to
+  }
+}
+    `;
+export const GetCollectionHoldersDocument = gql`
+    query GetCollectionHolders($collectionAddress: String) {
+  erc1155Balances(where: {contract_: {id: $collectionAddress}}) {
+    id
+    value
+    contract {
+      id
+    }
+    account {
+      id
+    }
+  }
+}
+    `;
+export const GetCollectionTokensDocument = gql`
+    query GetCollectionTokens($collectionAddress: String) {
+  erc1155Tokens(where: {contract_: {id: $collectionAddress}}) {
+    id
+    balances {
+      value
+      account {
+        id
+      }
+      contract {
+        id
+      }
+    }
+  }
+  erc721Tokens(where: {contract_: {id: $collectionAddress}}) {
+    id
+    owner {
+      id
+    }
+  }
+}
+    `;
 export const GetErc1155ContractsDocument = gql`
     query getERC1155Contracts {
   erc1155Contracts {
@@ -3713,7 +3779,6 @@ export const GetNfTwithAccountIdDocument = gql`
       token {
         id
         txCreation
-        uri
       }
     }
   }
@@ -3772,6 +3837,15 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    GetCollectionsData(variables?: GetCollectionsDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCollectionsDataQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetCollectionsDataQuery>(GetCollectionsDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCollectionsData', 'query');
+    },
+    GetCollectionHolders(variables?: GetCollectionHoldersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCollectionHoldersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetCollectionHoldersQuery>(GetCollectionHoldersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCollectionHolders', 'query');
+    },
+    GetCollectionTokens(variables?: GetCollectionTokensQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCollectionTokensQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetCollectionTokensQuery>(GetCollectionTokensDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetCollectionTokens', 'query');
+    },
     getERC1155Contracts(variables?: GetErc1155ContractsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetErc1155ContractsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetErc1155ContractsQuery>(GetErc1155ContractsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getERC1155Contracts', 'query');
     },
@@ -3799,6 +3873,27 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type GetCollectionsDataQueryVariables = Exact<{
+  collectionAddress?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetCollectionsDataQuery = { __typename?: 'Query', marketEvent1155S: Array<{ __typename?: 'MarketEvent1155', address?: string | null, netPrice?: any | null, price?: any | null, quoteToken?: string | null, to?: string | null, event: SellStatus, nftId?: { __typename?: 'ERC1155Token', contract: { __typename?: 'ERC1155Contract', id: string } } | null }>, marketEvent721S: Array<{ __typename?: 'MarketEvent721', id: string, address: string, price?: any | null, quoteToken?: string | null, event: SellStatus, to?: string | null, nftId: { __typename?: 'ERC721Token', contract: { __typename?: 'ERC721Contract', id: string } } }> };
+
+export type GetCollectionHoldersQueryVariables = Exact<{
+  collectionAddress?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetCollectionHoldersQuery = { __typename?: 'Query', erc1155Balances: Array<{ __typename?: 'ERC1155Balance', id: string, value: any, contract?: { __typename?: 'ERC1155Contract', id: string } | null, account?: { __typename?: 'Account', id: string } | null }> };
+
+export type GetCollectionTokensQueryVariables = Exact<{
+  collectionAddress?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetCollectionTokensQuery = { __typename?: 'Query', erc1155Tokens: Array<{ __typename?: 'ERC1155Token', id: string, balances: Array<{ __typename?: 'ERC1155Balance', value: any, account?: { __typename?: 'Account', id: string } | null, contract?: { __typename?: 'ERC1155Contract', id: string } | null }> }>, erc721Tokens: Array<{ __typename?: 'ERC721Token', id: string, owner: { __typename?: 'Account', id: string } }> };
+
 export type GetErc1155ContractsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3839,7 +3934,7 @@ export type GetNfTwithAccountIdQueryVariables = Exact<{
 }>;
 
 
-export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, ERC721tokens: Array<{ __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string }>, ERC1155balances: Array<{ __typename?: 'ERC1155Balance', valueExact: any, value: any, id: string, token: { __typename?: 'ERC1155Token', id: string, txCreation: string, uri?: string | null } }> } | null };
+export type GetNfTwithAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, ERC721tokens: Array<{ __typename?: 'ERC721Token', uri?: string | null, txCreation: string, id: string }>, ERC1155balances: Array<{ __typename?: 'ERC1155Balance', valueExact: any, value: any, id: string, token: { __typename?: 'ERC1155Token', id: string, txCreation: string } }> } | null };
 
 export type GetStatusErc1155SQueryVariables = Exact<{ [key: string]: never; }>;
 

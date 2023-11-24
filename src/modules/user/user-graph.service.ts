@@ -9,9 +9,9 @@ import { FilterNFTUserDetail } from './dto/get-nft-user.dto';
 import { GraphQLClient } from 'graphql-request';
 import { getSdk, GetNfTwithAccountIdQueryVariables } from '../../generated/graphql'
 import { validate as isValidUUID } from 'uuid'
-import { NFTType } from 'src/constants/enums/NFTType.enum';
+import { NFTTab } from 'src/constants/enums/NFTTab.enum'
 import { SellStatus } from '../../generated/graphql';
-
+import {CollectionService} from '../collection/collection.service';
 interface NFT {
   id?: string;
   name?: string;
@@ -60,8 +60,8 @@ interface ERC1155Balance {
 
 export interface Result {
   // user : USER;
-  ERC721tokens: (ERC721Token)[];
-  ERC1155balances: ERC1155Balance[];
+  // ERC721tokens: (ERC721Token)[];
+  // ERC1155balances: ERC1155Balance[];
 }
 
 
@@ -69,20 +69,26 @@ export interface Result {
 
 @Injectable()
 export class UserServiceExtend { 
-  constructor(private readonly prisma: PrismaService) { }
+  private readonly prisma: PrismaService;
+  private readonly collectionService: CollectionService;
+
+  constructor(prisma: PrismaService, collectionService: CollectionService) {
+    this.prisma = prisma;
+    this.collectionService = collectionService;
+  }
 
   private readonly endpoint = process.env.SUBGRAPH_URL;
-  
+
   private client = this.getGraphqlClient();
 
-  private readonly allowedEvents = [SellStatus.AskNew, SellStatus.Bid, SellStatus.AcceptBid];
+  private readonly allowedEvents = [SellStatus.AskNew, SellStatus.AskCancel, SellStatus.Trade];
   
   private getGraphqlClient() {
     return new GraphQLClient(this.endpoint);
   }
   // Remove few prop secret
   private minifyUserObjecct(user: any): any {
-    const propertiesToRemove = ['signature', 'signer', 'signedMessage', 'nftsOwnership' , 'nftCreator'];
+    const propertiesToRemove = ['signature', 'signer', 'signedMessage', 'nftsOwnership' , 'nftCreator' , 'nftCollection'];
     const minifiedUser = { ...user };
     for (const property in minifiedUser) {
       if (propertiesToRemove.includes(property)) {
@@ -92,9 +98,9 @@ export class UserServiceExtend {
     return minifiedUser;
   }
 
-  async getNFTByUser(id: string, filter: FilterNFTUserDetail): Promise<Result> {
+  async getNFTByUser(id: string, filter: FilterNFTUserDetail): Promise<any> {
     try {
-      const { type } = filter;
+      const { tab } = filter;
       if (!isValidUUID(id)) {
         throw new Error('Invalid ID. Please try again !');
       }
@@ -102,7 +108,7 @@ export class UserServiceExtend {
         this.prisma.user.findUnique({
           where: { id },
           include: {
-            nftCreator: type === NFTType.CREATOR ? {
+            nftCreator: tab === NFTTab.CREATOR ? {
               select: {
                 id: true,
                 name: true,
@@ -152,18 +158,18 @@ export class UserServiceExtend {
         throw new NotFoundException()
       }
       const { publicKey } = userData;
-      const { statusERC721S = [], statusERC1155S = [], ERC721tokens = [], ERC1155balances = [] } = await this.getOnChainDataNFT(publicKey);
+      const { statusERC721S = [], statusERC1155S = [], ERC721tokens = [], ERC1155balances = [] } = await this.getDataSubgraphNFT(publicKey);
       const {nftCreator = []} = userData;
-      const mergedERC721 = this.mergeERCData721(ERC721tokens, NFTList ,statusERC721S, nftCreator, type);
-      const mergedERC1155 = this.mergeERCData1155(ERC1155balances, NFTList, statusERC1155S, nftCreator,type);
-      return { ...this.minifyUserObjecct(userData), ERC721tokens: mergedERC721, ERC1155balances: mergedERC1155 };
+      const mergedERC721 = this.mergeERCData721(ERC721tokens, NFTList ,statusERC721S, nftCreator, tab);
+      const mergedERC1155 = this.mergeERCData1155(ERC1155balances, NFTList, statusERC1155S, nftCreator,tab);
+      return [...mergedERC721 , ...mergedERC1155]
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
 
-  async getOnChainDataNFT(publicKey: string): Promise<{ ERC721tokens: any[]; ERC1155balances: any[]; statusERC721S: any[]; statusERC1155S: any[] }> {
+  async getDataSubgraphNFT(publicKey: string): Promise<{ ERC721tokens: any[]; ERC1155balances: any[]; statusERC721S: any[]; statusERC1155S: any[] }> {
     const sdk = getSdk(this.client);
     const { account } = await sdk.getNFTwithAccountID({ id: publicKey });
     const { marketEvent721S: statusERC721S = [] } = await sdk.getStatusERC721S();
@@ -171,7 +177,7 @@ export class UserServiceExtend {
     return { ERC721tokens: account?.ERC721tokens || [], ERC1155balances: account?.ERC1155balances || [], statusERC721S, statusERC1155S };
   }
 
-  mergeERCData1155(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
+  mergeERCData1155(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTTab): any[] {
     const mergeNFTAndStatus = (token: any, nftList: NFT[], statusList: any[]) => {
       const tokenId = token?.token?.id || token.id;
       const matchingNFT = (nftList.find(nft => nft.id === tokenId) || {});
@@ -184,10 +190,10 @@ export class UserServiceExtend {
     };
   
     switch (type) {
-      case NFTType.CREATOR:
+      case NFTTab.CREATOR:
         return nftCreator.map(token => mergeNFTAndStatus(token, nftCreator, status));
   
-      case NFTType.ON_SALES:
+      case NFTTab.ON_SALES:
         const tokenList = tokens.map(token => mergeNFTAndStatus(token, NFTList, status));
         return tokenList.filter(item => this.allowedEvents.includes(item?.event));
   
@@ -196,7 +202,7 @@ export class UserServiceExtend {
     }
   }
 
-  mergeERCData721(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
+  mergeERCData721(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTTab): any[] {
     const mergeNFTAndStatus = (token: any, nftList: NFT[], statusList: any[]) => {
       const matchingNFT = (nftList.find(nft => nft.id === token.id) || {});
       const matchingNFTStatus = (statusList.find(status => status?.nftId?.id === token.id) || {});
@@ -208,10 +214,10 @@ export class UserServiceExtend {
     };
   
     switch (type) {
-      case NFTType.CREATOR:
+      case NFTTab.CREATOR:
         return nftCreator.map(token => mergeNFTAndStatus(token, nftCreator, status));
   
-      case NFTType.ON_SALES:
+      case NFTTab.ON_SALES:
         const tokenList = tokens.map(token => mergeNFTAndStatus(token, NFTList, status));
         return tokenList.filter(item => this.allowedEvents.includes(item?.event));
   
@@ -239,6 +245,7 @@ export class UserServiceExtend {
                   symbol: true,
                   description: true,
                   status: true,
+                  address : true,
                   type: true,
                   categoryId: true,
                   createdAt: true,
@@ -257,88 +264,39 @@ export class UserServiceExtend {
       if (!userData) {
         throw new NotFoundException();
       }
-      let { nftCollection: nftCollecionOffChain = [] } = (userData || {});
-      let [erc721Contracts, erc1155Contracts] = await this.getCollectionOnChain();
-
-      let nftCollection721 = await this.mergeERC721Contracts(erc721Contracts, nftCollecionOffChain);
-      let nftCollection1155 = await this.mergeERC1155Contracts(erc1155Contracts, nftCollecionOffChain);
-
-      delete userData.nftCollection;
-      return { ...userData, erc721Contracts: nftCollection721, erc1155Contracts: nftCollection1155 };
+      let { nftCollection = [] } = userData; 
+      const subgraphCollection = await Promise.all(nftCollection.map(async (item) => {
+        let {collection} = item;
+        const generalInfo = await this.collectionService.getGeneralCollectionData(collection.address, collection.type);
+        return { ... collection, ...generalInfo}
+      }))
+      return subgraphCollection
+      // return { ...this.minifyUserObjecct(userData), collections : subgraphCollection };
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
+  // async getCollectionOnChain(): Promise<any[]> {
+  //   const sdk = getSdk(this.client);
+  //   const { erc721Contracts = [] } = await sdk.getERC721Contracts();
+  //   const { erc1155Contracts = [] } = await sdk.getERC1155Contracts();
+  //   return [erc721Contracts, erc1155Contracts]
+  // }
 
+  // mergeERC721Contracts(dataOnChain: any[], dataOffChain: any[]) {
+  //   return dataOffChain.map(off => {
+  //     let { collection } = off;
+  //     let matchingCollection = (dataOnChain || []).find(on => collection.txCreationHash == on.txCreation);
+  //     return matchingCollection ? { ...collection, dataOnChain: matchingCollection } : { ...collection, dataOnChain: {} }
+  //   })
+  // }
 
-  async getCollectionOnChain(): Promise<any[]> {
-    const sdk = getSdk(this.client);
-    const { erc721Contracts = [] } = await sdk.getERC721Contracts();
-    const { erc1155Contracts = [] } = await sdk.getERC1155Contracts();
-    return [erc721Contracts, erc1155Contracts]
-  }
-
-  mergeERC721Contracts(dataOnChain: any[], dataOffChain: any[]) {
-    return dataOffChain.map(off => {
-      let { collection } = off;
-      let matchingCollection = (dataOnChain || []).find(on => collection.txCreationHash == on.txCreation);
-      return matchingCollection ? { ...collection, dataOnChain: matchingCollection } : { ...collection, dataOnChain: {} }
-    })
-  }
-
-  mergeERC1155Contracts(dataOnChain: any[], dataOffChain: any[]) {
-    return dataOffChain.map(off => {
-      let { collection } = off;
-      let matchingCollection = (dataOnChain || []).find(on => collection.txCreationHash == on.txCreation);
-      return matchingCollection ? { ...collection, dataOnChain: matchingCollection } : { ...collection, dataOnChain: {} }
-    })
-  }
+  // mergeERC1155Contracts(dataOnChain: any[], dataOffChain: any[]) {
+  //   return dataOffChain.map(off => {
+  //     let { collection } = off;
+  //     let matchingCollection = (dataOnChain || []).find(on => collection.txCreationHash == on.txCreation);
+  //     return matchingCollection ? { ...collection, dataOnChain: matchingCollection } : { ...collection, dataOnChain: {} }
+  //   })
+  // }
 }
-
-
-
-    // return nftsOwnership.map((nft) => {
-    //   const matchingNFT = tokens.find((token) => nft?.nft?.id === token.id);
-    //   const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
-    //   delete matchingNFTStatus.nftId;
-    //   return matchingNFT ? { value: (nft?.quantity || 0), ...nft?.nft, status: (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status) } : { ...nft?.nft }
-    // });
-    // return nftsOwnership.map((nft) => {
-    //   const matchingNFT = tokens.find((token) => nft?.nft?.id === token?.token?.id);
-    //   const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
-    //   delete matchingNFTStatus.nftId;
-    //   return matchingNFT ? { value: (matchingNFT?.valueExact || 0), ...nft?.nft, status: (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status) } : { ...nft?.nft }
-    // });
-
-    //  mergeERCData(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
-    //   const mapFunction = type === NFTType.CREATOR ? nftCreator : tokens;
-    //   return mapFunction.map(token => {
-    //     const matchingNFT = type === NFTType.CREATOR ? {} : NFTList.find(nft => nft.id === token.id);
-    //     const matchingNFTStatus = (status.find(status => status?.nftId?.id === token.id) || {});
-    //     return {
-    //       ...matchingNFT,
-    //       ...matchingNFTStatus,
-    //       ...token,
-    //     };
-    //   });
-    // }
-
-        // return type === NFTType.CREATOR ?    
-    // nftCreator.map(token =>{
-    //   const matchingNFTStatus = (status.find((status) => status?.nftId?.id == token.id) || {});
-    //   return {
-    //     ...token,
-    //     ...matchingNFTStatus,
-    //   };
-    // })
-    // :
-    //  tokens.map(token => {
-    //   const matchingNFT = (NFTList.find(nft => nft.id == token.id) || {});
-    //   const matchingNFTStatus = (status.find((status) => status?.nftId?.id == token.id) || {});
-    //   return {
-    //     ...token,
-    //     ...matchingNFTStatus,
-    //     ...matchingNFT,
-    //   };
-    // })s

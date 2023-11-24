@@ -16,3 +16,4 @@ query getNFTwithAccountID($id: ID!) {
       }
     }
   }
+}

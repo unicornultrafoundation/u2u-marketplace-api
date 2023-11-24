@@ -1,10 +1,10 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
-import {NFTType} from '../../../constants/enums/NFTType.enum';
+import {NFTTab} from '../../../constants/enums/NFTTab.enum';
 import { IsNotEmpty, IsString , IsOptional, IsEnum } from 'class-validator';
 
 export class FilterNFTUserDetail  {
     @IsOptional()
-    @IsEnum(NFTType)
-    type: NFTType;
+    @IsEnum(NFTTab)
+    tab: NFTTab;
 }
