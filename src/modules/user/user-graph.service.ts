@@ -10,11 +10,8 @@ import { GraphQLClient } from 'graphql-request';
 import { getSdk, GetNfTwithAccountIdQueryVariables } from '../../generated/graphql'
 import { validate as isValidUUID } from 'uuid'
 import { NFTType } from 'src/constants/enums/NFTType.enum';
-<<<<<<< HEAD
 import { SellStatus } from '../../generated/graphql';
 
-=======
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
 interface NFT {
   id?: string;
   name?: string;
@@ -73,6 +70,7 @@ export interface Result {
 @Injectable()
 export class UserServiceExtend { 
   constructor(private readonly prisma: PrismaService) { }
+
   private readonly endpoint = process.env.SUBGRAPH_URL;
   
   private client = this.getGraphqlClient();
@@ -118,11 +116,7 @@ export class UserServiceExtend {
                 traits: {
                   select: {
                     id: true,
-<<<<<<< HEAD
-          s          value: true,
-=======
                     value: true,
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
                     display_type: true,
                     trait_type: true
                   }
@@ -160,13 +154,8 @@ export class UserServiceExtend {
       const { publicKey } = userData;
       const { statusERC721S = [], statusERC1155S = [], ERC721tokens = [], ERC1155balances = [] } = await this.getOnChainDataNFT(publicKey);
       const {nftCreator = []} = userData;
-<<<<<<< HEAD
       const mergedERC721 = this.mergeERCData721(ERC721tokens, NFTList ,statusERC721S, nftCreator, type);
       const mergedERC1155 = this.mergeERCData1155(ERC1155balances, NFTList, statusERC1155S, nftCreator,type);
-=======
-      const mergedERC721 = this.mergeERCData(ERC721tokens, NFTList ,statusERC721S, nftCreator, type);
-      const mergedERC1155 = this.mergeERCData(ERC1155balances, NFTList, statusERC1155S, nftCreator,type);
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
       return { ...this.minifyUserObjecct(userData), ERC721tokens: mergedERC721, ERC1155balances: mergedERC1155 };
     } catch (err) {
       console.error(err);
@@ -182,7 +171,6 @@ export class UserServiceExtend {
     return { ERC721tokens: account?.ERC721tokens || [], ERC1155balances: account?.ERC1155balances || [], statusERC721S, statusERC1155S };
   }
 
-<<<<<<< HEAD
   mergeERCData1155(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
     const mergeNFTAndStatus = (token: any, nftList: NFT[], statusList: any[]) => {
       const tokenId = token?.token?.id || token.id;
@@ -232,20 +220,6 @@ export class UserServiceExtend {
     }
   }
 
-=======
-   mergeERCData(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
-    const mapFunction = type === NFTType.CREATOR ? nftCreator : tokens;
-    return mapFunction.map(token => {
-      const matchingNFT = type === NFTType.CREATOR ? {} : NFTList.find(nft => nft.id === token.id);
-      const matchingNFTStatus = (status.find(status => status?.nftId?.id === token.id) || {});
-      return {
-        ...matchingNFT,
-        ...matchingNFTStatus,
-        ...token,
-      };
-    });
-  }
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
   
   async getCollectionByUser(id: string): Promise<any> {
     try {
@@ -335,7 +309,6 @@ export class UserServiceExtend {
     //   const matchingNFTStatus = (status.find((token) => nft?.nft?.id === token?.nftId?.id) || {});
     //   delete matchingNFTStatus.nftId;
     //   return matchingNFT ? { value: (matchingNFT?.valueExact || 0), ...nft?.nft, status: (matchingNFTStatus?.event ? matchingNFTStatus?.event : nft?.nft?.status) } : { ...nft?.nft }
-<<<<<<< HEAD
     // });
 
     //  mergeERCData(tokens: any[], NFTList: NFT[], status: any[], nftCreator: any[], type: NFTType): any[] {
@@ -369,6 +342,3 @@ export class UserServiceExtend {
     //     ...matchingNFT,
     //   };
     // })s
-=======
-    // });
->>>>>>> ad0fa91 (Update Optimize Code Get NFT By User)
