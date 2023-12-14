@@ -15,7 +15,8 @@ import { TraitGeneralInfo, TraitService } from '../nft/trait.service';
 import { GetAllCollectionDto } from './dto/get-all-collection.dto';
 import { GetCollectionMarketData } from '../graph-qlcaller/getCollectionMarketData.service';
 import { CollectionPriceService } from './collectionPrice.service';
-
+import { GetCollectionByUserDto } from './dto/get-collection-by-user.dto';
+import { TypeBase } from '../../constants/enums/TypeGetBase.enum';
 interface CollectionGeneral {
   totalOwner: number;
   volumn: string;
@@ -385,7 +386,10 @@ export class CollectionService {
     }
   }
 
-  async findWithUserID(id: string): Promise<CollectionEntity[]> {
+  async findWithUserID(
+    id: string,
+    input: GetCollectionByUserDto,
+  ): Promise<PagingResponse<CollectionEntity>> {
     try {
       if (!isValidUUID(id)) {
         throw new Error('Invalid User. Please try again !');
@@ -396,62 +400,80 @@ export class CollectionService {
       if (!checkExist) {
         throw new NotFoundException();
       }
-      const userWithCollection = await this.prisma.user.findUnique({
+      const userWithCollection = await this.prisma.userCollection.findMany({
         where: {
-          id: id,
+          userId: id,
         },
+        skip: (input.page - 1) * input.limit,
+        take: input.limit,
         include: {
-          nftCollection: {
+          collection: {
             select: {
-              collection: {
+              id: true,
+              txCreationHash: true,
+              name: true,
+              address: true,
+              metadata: true,
+              shortUrl: true,
+              symbol: true,
+              description: true,
+              status: true,
+              type: true,
+              categoryId: true,
+              createdAt: true,
+              avatar: true,
+              coverImage: true,
+              updatedAt: true,
+              category: {
                 select: {
                   id: true,
-                  txCreationHash: true,
                   name: true,
-                  address: true,
-                  metadata: true,
-                  shortUrl: true,
-                  symbol: true,
-                  description: true,
-                  status: true,
-                  type: true,
-                  categoryId: true,
-                  createdAt: true,
-                  avatar: true,
-                  coverImage: true,
-                  updatedAt: true,
-                  category: {
-                    select: {
-                      id: true,
-                      name: true,
-                    },
-                  },
                 },
               },
             },
           },
         },
       });
-      const baseCollection721 = await this.prisma.collection.findUnique({
-        where: {
-          address: process.env.BASE_ADDR_721,
-        },
-        include: {
-          category: true,
-        },
+      const response = userWithCollection.map((item) => {
+        return { collection: item.collection };
       });
-      const baseCollection1155 = await this.prisma.collection.findUnique({
-        where: {
-          address: process.env.BASE_ADDR_1155,
-        },
-        include: {
-          category: true,
-        },
-      });
-      userWithCollection.nftCollection.push({ collection: baseCollection721 });
-      userWithCollection.nftCollection.push({ collection: baseCollection1155 });
 
-      return userWithCollection.nftCollection.map((i) => i.collection);
+      if (input.hasBase == TypeBase.TRUE) {
+        const baseCollection721 = await this.prisma.collection.findUnique({
+          where: {
+            address: process.env.BASE_ADDR_721,
+          },
+          include: {
+            category: true,
+          },
+        });
+        const baseCollection1155 = await this.prisma.collection.findUnique({
+          where: {
+            address: process.env.BASE_ADDR_1155,
+          },
+          include: {
+            category: true,
+          },
+        });
+
+        response.push({ collection: baseCollection721 });
+        response.push({ collection: baseCollection1155 });
+      }
+
+      const total = await this.prisma.userCollection.count({
+        where: {
+          userId: id,
+        },
+      });
+
+      return {
+        data: response.map((i) => i.collection),
+        paging: {
+          total: total,
+          limit: input.limit,
+          page: input.page,
+        },
+      };
     } catch (error) {
       throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
     }
