@@ -386,6 +386,14 @@ export class CollectionService {
     }
   }
 
+  parseBool = (params) => {
+    return !(
+      params === 'false' ||
+      params === '0' ||
+      params === '' ||
+      params === undefined
+    );
+  };
   async findWithUserID(
     id: string,
     input: GetCollectionByUserDto,
@@ -438,7 +446,7 @@ export class CollectionService {
         return { collection: item.collection };
       });
 
-      if (input.hasBase == TypeBase.TRUE) {
+      if (this.parseBool(input.hasBase)) {
         const baseCollection721 = await this.prisma.collection.findUnique({
           where: {
             address: process.env.BASE_ADDR_721,

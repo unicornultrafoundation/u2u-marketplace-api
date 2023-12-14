@@ -4,6 +4,5 @@ import { TypeBase } from '../../../constants/enums/TypeGetBase.enum';
 
 export class GetCollectionByUserDto extends OffsetPaginationDto {
   @IsOptional()
-  @IsEnum(TypeBase)
-  hasBase: TypeBase;
+  hasBase: boolean;
 }
