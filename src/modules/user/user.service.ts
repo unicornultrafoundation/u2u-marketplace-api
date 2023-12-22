@@ -12,9 +12,22 @@ import { validate as isValidUUID } from 'uuid';
 import { FindAllProjectDto } from '../launchpad/dto/find-all-project.dto';
 import { ListProjectEntity } from './entities/project.entity';
 import { UserEntity } from './entities/user.entity';
+import { Redis } from 'src/database';
+import { SendVerifyEmailDto, VerifyEmailDto } from './dto/verify-email.dto';
+import * as jwt from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
+
+interface ValidateBody {
+  id: number;
+  name: string;
+  email: string;
+}
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
+
+  private readonly secretKeyConfirm = process.env.MAIL_KEY_CONFIRM;
+  private readonly tokenExpirationTime = 5 * 60;
 
   // Remove few prop secret
   private minifyUserObject(user: any): any {
@@ -319,6 +332,81 @@ export class UserService {
       return response;
     } catch (error) {
       throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async sendverifyEmail(input: SendVerifyEmailDto, user: User) {
+    try {
+      const { id } = user;
+      const currentUser = await this.prisma.user.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!currentUser) {
+        throw new NotFoundException();
+      }
+      if (input.email !== currentUser.email) {
+        throw new Error('Email is incorrect');
+      }
+
+      await Redis.publish('user-channel', {
+        data: {
+          isVerify: true,
+          email: input.email,
+          name: currentUser.username,
+          id: currentUser.id,
+        },
+        process: 'email-verify',
+      });
+      return true;
+    } catch (error) {
+      throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async checkVerifyEmail(input: VerifyEmailDto, user: User) {
+    try {
+      const validatie = this.verifyTokenConfirm(input.token);
+      if (!validatie) {
+        throw Error('Token is invalid');
+      }
+      if (user.id != validatie?.id) {
+        throw new Error('This email cannot be confirmed');
+      }
+      if (user && user?.accountStatus) {
+        throw new Error('This email has been verified');
+      }
+      const resultUpdate = await this.prisma.user.update({
+        where: { id: validatie?.id },
+        data: {
+          accountStatus: true,
+        },
+      });
+      return resultUpdate;
+    } catch (error) {
+      throw new HttpException(`${error.message}`, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  verifyTokenConfirm(token: string): any {
+    try {
+      const decodedToken = jwt.verify(
+        token,
+        this.secretKeyConfirm,
+      ) as JwtPayload;
+
+      // Check expiration time manually if needed
+      if (decodedToken && decodedToken.exp) {
+        const currentTimestamp = Math.floor(Date.now() / 1000); // Convert to seconds
+        if (decodedToken.exp < currentTimestamp) {
+          // Token has expired
+          return null;
+        }
+      }
+      return decodedToken;
+    } catch (error) {
+      return null; // Token verification failed
     }
   }
 }

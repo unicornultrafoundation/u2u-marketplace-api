@@ -18,11 +18,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetCurrentUser } from 'src/decorators/get-current-user.decorator';
 import { User } from '@prisma/client';
 import { AuthenticationGuard } from '../auth/guards/auth.guard';
+import { AuthenticationGuardForVerify } from '../auth/guards/authForVerify.guard';
+
 import { GetAllUser } from './dto/get-all-user.dto';
 import { FilterNFTUserDetail } from './dto/get-nft-user.dto';
 import { UserServiceExtend } from './user-graph.service';
 import { AuthenticationCustomizeGuard } from '../auth/guards/authCustomize.guard';
 import { FindAllProjectDto } from '../launchpad/dto/find-all-project.dto';
+import { SendVerifyEmailDto, VerifyEmailDto } from './dto/verify-email.dto';
 @Controller('user')
 export class UserController {
   constructor(
@@ -78,5 +81,23 @@ export class UserController {
     @Query() query: FindAllProjectDto,
   ) {
     return await this.userService.getProjectByUser(query, user);
+  }
+
+  @Post('/send-verify-email')
+  @UseGuards(AuthenticationGuardForVerify)
+  async sendVerifyEmail(
+    @GetCurrentUser() user: User,
+    @Body() verifyEmailDto: SendVerifyEmailDto,
+  ) {
+    return await this.userService.sendverifyEmail(verifyEmailDto, user);
+  }
+
+  @Post('/verify-email')
+  @UseGuards(AuthenticationGuardForVerify)
+  async verifyEmail(
+    @GetCurrentUser() user: User,
+    @Body() verifyEmailDto: VerifyEmailDto,
+  ) {
+    return await this.userService.checkVerifyEmail(verifyEmailDto, user);
   }
 }

@@ -33,6 +33,8 @@ model User {
   webURL        String?
   coverImage    String?
   projectSubscribe  UserProject[]
+  accountStatus   Boolean       @default(false)
+
 }
 
 model NFT {
