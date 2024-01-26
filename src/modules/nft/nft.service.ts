@@ -298,6 +298,9 @@ export class NftService {
           take: filter.limit,
           // where: whereCondition.OR.length > 0 || whereConditionInternal.AND.length > 0 ? whereCondition : { AND: [] },
           where: whereCondition,
+          orderBy: {
+            createdAt: filter.order,
+          },
           include: {
             creator: {
               select: creatorSelect,
@@ -431,6 +434,9 @@ export class NftService {
           // skip: (filter.page - 1) * filter.limit,
           // take: filter.limit,
           where: whereCondition1,
+          orderBy: {
+            createdAt: filter.order,
+          },
           include: {
             creator: {
               select: creatorSelect,
@@ -486,9 +492,9 @@ export class NftService {
             }),
           };
         });
-        // const total = await this.prisma.nFT.count({
-        //   where: whereCondition1,
-        // });
+        const total = await this.prisma.nFT.count({
+          where: whereCondition1,
+        });
         return {
           data: mergedArray,
           paging: {

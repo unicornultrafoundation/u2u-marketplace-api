@@ -18,7 +18,7 @@ export class OffsetPaginationDto {
 
   @IsOptional()
   @IsIn(['asc', 'desc'])
-  order?: 'asc' | 'desc' = 'asc';
+  order?: 'asc' | 'desc' = 'desc';
 
   // Add any other common pagination-related properties or methods here.
 }

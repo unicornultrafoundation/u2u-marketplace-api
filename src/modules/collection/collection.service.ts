@@ -255,13 +255,27 @@ export class CollectionService {
         );
         return { ...item, ...generalInfo };
       });
-      const dataArray = Promise.all(subgraphCollection);
-
+      const dataArray = await Promise.all(subgraphCollection);
       const total = await this.prisma.collection.count({
         where: whereCondition,
       });
+
+      // const sortOrder = input.order === 'desc' ? 1 : -1;
+      // const sortedArray = dataArray.sort((a, b) => {
+      //   const floorPriceA = parseFloat(a.floorPrice);
+      //   const floorPriceB = parseFloat(b.floorPrice);
+
+      //   if (floorPriceA < floorPriceB) {
+      //     return -sortOrder;
+      //   }
+      //   if (floorPriceA > floorPriceB) {
+      //     return sortOrder;
+      //   }
+      //   return 0;
+      // });
+
       return {
-        data: await dataArray,
+        data: dataArray,
         paging: {
           total,
           page: input.page,
@@ -273,6 +287,9 @@ export class CollectionService {
         where: whereCondition,
         skip: (input.page - 1) * input.limit,
         take: input.limit,
+        orderBy: {
+          createdAt: input.order,
+        },
         include: {
           creators: {
             select: {
@@ -523,7 +540,6 @@ export class CollectionService {
         return { ...item, ...generalInfo };
       });
       const dataArray = await Promise.all(subgraphCollection);
-
       return {
         data: dataArray,
         paging: {

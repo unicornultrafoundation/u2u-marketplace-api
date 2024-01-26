@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OffsetPaginationDto } from 'src/commons/definitions/OffsetPagination.input';
 
