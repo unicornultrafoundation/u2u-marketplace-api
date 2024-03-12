@@ -27,6 +27,10 @@ import {
 } from '../../generated/graphql';
 import SecureUtil from '../../commons/Secure.common';
 import PaginationCommon from 'src/commons/HasNext.common';
+import {
+  userSelectFull,
+  projectSelect,
+} from '../../commons/definitions/Constraint.Object';
 interface UserRedisinterface {
   timestamp: string;
   email: string;
@@ -156,44 +160,7 @@ export class UserService {
       where: whereCondition,
       skip: (filter.page - 1) * filter.limit,
       take: filter.limit,
-      select: {
-        id: true,
-        email: true,
-        avatar: true,
-        username: true,
-        signature: true,
-        signedMessage: true,
-        signDate: true,
-        signer: true,
-        publicKey: true,
-        acceptedTerms: true,
-        createdAt: true,
-        updatedAt: true,
-        bio: true,
-        facebookLink: true,
-        twitterLink: true,
-        telegramLink: true,
-        shortLink: true,
-        discordLink: true,
-        webURL: true,
-        coverImage: true,
-        followers: true,
-        following: true,
-        accountStatus: true,
-        verifyEmail: true,
-        ...(currentUserId
-          ? {
-              user: {
-                select: {
-                  isFollow: true,
-                },
-                where: {
-                  followerId: currentUserId,
-                },
-              },
-            }
-          : {}),
-      },
+      select: userSelectFull(currentUserId),
     });
 
     // const total = await this.prisma.user.count({
@@ -252,44 +219,7 @@ export class UserService {
                 ],
               }),
         },
-        select: {
-          id: true,
-          email: true,
-          avatar: true,
-          username: true,
-          signature: true,
-          signedMessage: true,
-          signDate: true,
-          signer: true,
-          publicKey: true,
-          acceptedTerms: true,
-          createdAt: true,
-          updatedAt: true,
-          bio: true,
-          facebookLink: true,
-          twitterLink: true,
-          telegramLink: true,
-          shortLink: true,
-          discordLink: true,
-          webURL: true,
-          coverImage: true,
-          followers: true,
-          following: true,
-          accountStatus: true,
-          verifyEmail: true,
-          ...(currentUserId
-            ? {
-                user: {
-                  select: {
-                    isFollow: true,
-                  },
-                  where: {
-                    followerId: currentUserId,
-                  },
-                },
-              }
-            : {}),
-        },
+        select: userSelectFull(currentUserId),
       });
 
       if (!result) {
@@ -433,23 +363,7 @@ export class UserService {
         include: {
           project: {
             select: {
-              id: true,
-              idOnchain: true,
-              name: true,
-              banner: true,
-              website: true,
-              telegram: true,
-              facebook: true,
-              instagram: true,
-              discord: true,
-              shortLink: true,
-              organization: true,
-              description: true,
-              isActivated: true,
-              collection: true,
-              details: true,
-              twitter: true,
-              logo: true,
+              ...projectSelect,
               rounds: {
                 where: whereRounds,
                 include: {

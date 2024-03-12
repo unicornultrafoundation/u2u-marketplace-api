@@ -10,6 +10,7 @@ import {
 import { Query } from '../../generated/graphql';
 import { ZERO_ADDR } from 'src/constants/web3Const/messages';
 import { GraphQLClient, gql } from 'graphql-request';
+import { creatorSelect } from '../../commons/definitions/Constraint.Object';
 @Injectable()
 export class CollectionPriceService {
   constructor(
@@ -125,14 +126,7 @@ export class CollectionPriceService {
     try {
       return await this.prisma.user.findFirst({
         where: { signer },
-        select: {
-          id: true,
-          email: true,
-          avatar: true,
-          username: true,
-          signer: true,
-          shortLink: true,
-        },
+        select: creatorSelect,
       });
     } catch (error) {
       console.error(`Error fetching user data for signer ${signer}:`, error);

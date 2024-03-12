@@ -1,3 +1,4 @@
+import { Account } from './../../generated/graphql';
 import { CreateNftDto } from './dto/create-nft.dto';
 import { Prisma, TX_STATUS, User, MarketplaceStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -29,6 +30,8 @@ import {
   CollectionSelect,
   marketplaceSelect,
   nftSelect,
+  userSelect,
+  nftOwnerShip,
 } from '../../commons/definitions/Constraint.Object';
 import { GetGeneralInforDto } from './dto/get-general-infor.dto';
 import { GeneralInfor } from 'src/constants/enums/GeneralInfor.enum';
@@ -209,8 +212,10 @@ export class NftService {
             Math.floor(filter.limit / 2),
           );
         hasNextNftOwner =
-          hasNextNftOwnerTemp.ERC721tokens.length > 0 ||
-          hasNextNftOwnerTemp.ERC1155balances.length > 0;
+          (hasNextNftOwnerTemp &&
+            hasNextNftOwnerTemp.ERC721tokens.length > 0) ||
+          (hasNextNftOwnerTemp &&
+            hasNextNftOwnerTemp.ERC1155balances.length > 0);
         // console.log(account);
         if (account) {
           const erc1155BalancesSort = this.sortERC1155balances(
@@ -596,14 +601,7 @@ export class NftService {
           in: bidderAddress,
         },
       },
-      select: {
-        signer: true,
-        publicKey: true,
-        id: true,
-        username: true,
-        avatar: true,
-        email: true,
-      },
+      select: userSelect,
     });
 
     const sellerAddress = bidInfo.concat(sellInfo).map((seller) => seller.from);
@@ -614,14 +612,7 @@ export class NftService {
           in: sellerAddress.filter((i) => i !== null),
         },
       },
-      select: {
-        signer: true,
-        publicKey: true,
-        id: true,
-        username: true,
-        avatar: true,
-        email: true,
-      },
+      select: userSelect,
     });
 
     const mergedBidder = bidInfo.map((item) => {
@@ -820,27 +811,7 @@ export class NftService {
         },
         include: {
           nftsOwnership: {
-            select: {
-              quantity: true,
-              nft: {
-                select: {
-                  id: true,
-                  name: true,
-                  traits: true,
-                  createdAt: true,
-                  updatedAt: true,
-                  status: true,
-                  tokenUri: true,
-                  txCreationHash: true,
-                  creator: {
-                    select: creatorSelect,
-                  },
-                  collection: {
-                    select: CollectionSelect,
-                  },
-                },
-              },
-            },
+            select: nftOwnerShip,
           },
         },
       });
@@ -874,13 +845,7 @@ export class NftService {
     try {
       return await this.prisma.user.findFirst({
         where: { signer },
-        select: {
-          id: true,
-          email: true,
-          avatar: true,
-          username: true,
-          signer: true,
-        },
+        select: userSelect,
       });
     } catch (error) {
       console.error(`Error fetching user data for signer ${signer}:`, error);
@@ -910,7 +875,7 @@ export class NftService {
             1,
             1000,
           );
-          const { ERC721tokens = [], ERC1155balances = [] } = account;
+          const { ERC721tokens = [], ERC1155balances = [] } = account || {};
           const countHolding =
             [...ERC721tokens, ...ERC1155balances].length || 0;
           return countHolding;
