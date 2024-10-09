@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Res } from '@nestjs/common';
+import {
+  Body,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Res,
+} from '@nestjs/common';
 import { UpdateCommonDto } from './dto/update-common.dto';
 import { create } from 'ipfs-http-client';
 import OtherCommon from 'src/commons/Other.common';
@@ -18,6 +24,8 @@ import {
 import * as path from 'path';
 import { AWSError, S3 } from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
+import CommonHepler from './helper/common.helper';
+import { PINATA_GATEWAYS } from 'src/constants/Url.constant';
 
 @Injectable()
 export class CommonService {
@@ -238,6 +246,56 @@ export class CommonService {
         return {
           fileHashes: fileUrls,
           metadataHash: metadataResult.path,
+        };
+      } else {
+        return { fileHashes: fileUrls };
+      }
+    } catch (err) {
+      console.log('err: ', err);
+    }
+  }
+
+  async uploadIpfsPinata(files: Express.Multer.File[], metadata: any) {
+    try {
+      const filesToAdd = files.map((file) => ({
+        path: file.originalname,
+        content: file.buffer,
+      }));
+      const results = [];
+
+      for (const file of filesToAdd) {
+        const formData = new FormData();
+        const blob = new Blob([file.content]);
+        const pinataMetadata = JSON.stringify({
+          name: file.path,
+        });
+        formData.append('file', blob);
+        formData.append('pinataMetadata', pinataMetadata);
+        const result = await CommonHepler.postPinata(formData);
+        results.push(result);
+      }
+
+      const directory = results[results.length - 1];
+      if (!directory) {
+        throw new Error('Failed to retrieve directory CID');
+      }
+      const directoryCid = directory.IpfsHash.toString();
+      const fileUrls = files.map(
+        (file) => `${PINATA_GATEWAYS}/ipfs/${directoryCid}`,
+      );
+      if (metadata) {
+        const metadataObject = JSON.parse(metadata);
+        const updatedMetadata = { ...metadataObject, fileUrls };
+        const metaDataUpload = JSON.stringify({
+          pinataContent: updatedMetadata,
+          pinataMetadata: {
+            name: `${directoryCid}.json`,
+          },
+        });
+        const result = await CommonHepler.uploadMetadataToIPFS(metaDataUpload);
+        return {
+          fileHashes: fileUrls,
+          metadataHash: `${PINATA_GATEWAYS}/ipfs/${result.IpfsHash}`,
         };
       } else {
         return { fileHashes: fileUrls };

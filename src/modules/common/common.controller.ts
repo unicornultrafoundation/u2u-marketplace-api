@@ -30,6 +30,12 @@ export class CommonController {
     @UploadedFiles() files: Express.Multer.File[],
     @Body() createFileDto: CreateFileDto,
   ) {
+    if (process.env.NODE_ENV === 'production') {
+      return await this.commonService.uploadIpfsPinata(
+        files,
+        createFileDto.metadata,
+      );
+    }
     return await this.commonService.uploadIpfs(files, createFileDto.metadata);
   }
 
